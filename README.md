@@ -38,7 +38,7 @@ for fast performance in a mobile environment.
 ![screenshot2](/images/screenshot2.jpg)
 
 breadwallet is open source and available under the terms of the MIT license.
-Source code is available at https://github.com/voisine/breadwallet
+Source code is available at https://github.com/a432511/breadwallet
 
 **WARNING:** installation on jailbroken devices is strongly discouraged
 
