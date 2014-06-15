@@ -470,7 +470,7 @@ static const char *dns_seeds[] = {
     if (! [transaction isSigned]) {
         if (completion) {
             completion([NSError errorWithDomain:@"BreadWallet" code:401 userInfo:@{NSLocalizedDescriptionKey:
-                        NSLocalizedString(@"bitcoin transaction not signed", nil)}]);
+                        NSLocalizedString(@"vertcoin transaction not signed", nil)}]);
         }
         return;
     }
@@ -478,7 +478,7 @@ static const char *dns_seeds[] = {
     if (! self.connected) {
         if (completion) {
             completion([NSError errorWithDomain:@"BreadWallet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
-                        NSLocalizedString(@"not connected to the bitcoin network", nil)}]);
+                        NSLocalizedString(@"not connected to the vertcoin network", nil)}]);
         }
         return;
     }

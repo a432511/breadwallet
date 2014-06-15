@@ -80,7 +80,7 @@
     NSURL *url = [NSURL URLWithString:s];
     
     if (! url || ! url.scheme) {
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"bitcoin://%@", s]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"vertcoin://%@", s]];
     }
     else if (! url.host && url.resourceSpecifier) {
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", url.scheme, url.resourceSpecifier]];
@@ -115,7 +115,7 @@
 {
     if (! self.paymentAddress) return nil;
 
-    NSMutableString *s = [NSMutableString stringWithFormat:@"bitcoin:%@", self.paymentAddress];
+    NSMutableString *s = [NSMutableString stringWithFormat:@"vertcoin:%@", self.paymentAddress];
     NSMutableArray *q = [NSMutableArray array];
     
     if (self.amount > 0) {
@@ -171,11 +171,11 @@
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:u
                                 cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0];
 
-    [req addValue:@"application/bitcoin-paymentrequest" forHTTPHeaderField:@"Accept"];
+    [req addValue:@"application/vertcoin-paymentrequest" forHTTPHeaderField:@"Accept"];
 
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        if (! [response.MIMEType.lowercaseString isEqual:@"application/bitcoin-paymentrequest"] || data.length > 50000){
+        if (! [response.MIMEType.lowercaseString isEqual:@"application/vertcoin-paymentrequest"] || data.length > 50000){
             completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);
@@ -220,14 +220,14 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:u
                                 cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0];
 
-    [req addValue:@"application/bitcoin-payment" forHTTPHeaderField:@"Content-Type"];
-    [req addValue:@"application/bitcoin-paymentack" forHTTPHeaderField:@"Accept"];
+    [req addValue:@"application/vertcoin-payment" forHTTPHeaderField:@"Content-Type"];
+    [req addValue:@"application/vertcoin-paymentack" forHTTPHeaderField:@"Accept"];
     [req setHTTPMethod:@"POST"];
     [req setHTTPBody:payment.data];
 
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        if (! [response.MIMEType.lowercaseString isEqual:@"application/bitcoin-paymentack"] || data.length > 50000) {
+        if (! [response.MIMEType.lowercaseString isEqual:@"application/vertcoin-paymentack"] || data.length > 50000) {
             completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);

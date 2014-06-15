@@ -31,9 +31,9 @@
 #import "BRBubbleView.h"
 #import "QREncoder.h"
 
-#define QR_TIP      NSLocalizedString(@"Let others scan this QR code to get your bitcoin address. Anyone can send "\
+#define QR_TIP      NSLocalizedString(@"Let others scan this QR code to get your vertcoin address. Anyone can send "\
                     "bitcoins to your wallet by transferring them to your address.", nil)
-#define ADDRESS_TIP NSLocalizedString(@"This is your bitcoin address. Tap to copy it or send it by email or sms. The "\
+#define ADDRESS_TIP NSLocalizedString(@"This is your vertcoin address. Tap to copy it or send it by email or sms. The "\
                     "address will change each time you receive funds, but old addresses always work.", nil)
 
 @interface BRReceiveViewController ()
@@ -185,8 +185,8 @@
         if ([MFMailComposeViewController canSendMail]) {
             MFMailComposeViewController *c = [MFMailComposeViewController new];
             
-            [c setSubject:NSLocalizedString(@"Bitcoin address", nil)];
-            [c setMessageBody:[@"bitcoin:" stringByAppendingString:self.paymentAddress] isHTML:NO];
+            [c setSubject:NSLocalizedString(@"Vertcoin address", nil)];
+            [c setMessageBody:[@"vertcoin:" stringByAppendingString:self.paymentAddress] isHTML:NO];
             c.mailComposeDelegate = self;
             [self.navigationController presentViewController:c animated:YES completion:nil];
             c.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper-default.png"]];
@@ -201,7 +201,7 @@
         if ([MFMessageComposeViewController canSendText]) {
             MFMessageComposeViewController *c = [MFMessageComposeViewController new];
             
-            c.body = [@"bitcoin:" stringByAppendingString:self.paymentAddress];
+            c.body = [@"vertcoin:" stringByAppendingString:self.paymentAddress];
             c.messageComposeDelegate = self;
             [self.navigationController presentViewController:c animated:YES completion:nil];
             c.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper-default.png"]];

@@ -33,7 +33,7 @@
 #import "BRWallet.h"
 #import "Reachability.h"
 
-#define BALANCE_TIP NSLocalizedString(@"This is your bitcoin balance. Bitcoin is a currency. "\
+#define BALANCE_TIP NSLocalizedString(@"This is your vertcoin balance. Vertcoin is a currency. "\
                                        "The exchange rate changes with the market.", nil)
 
 @interface BRRootViewController ()

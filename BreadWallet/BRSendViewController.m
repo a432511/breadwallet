@@ -38,10 +38,10 @@
 #import "NSMutableData+Bitcoin.h"
 #import <AVFoundation/AVFoundation.h>
 
-#define SCAN_TIP      NSLocalizedString(@"Scan someone else's QR code to get their bitcoin address. "\
+#define SCAN_TIP      NSLocalizedString(@"Scan someone else's QR code to get their vertcoin address. "\
                                          "You can send a payment to anyone with an address.", nil)
-#define CLIPBOARD_TIP NSLocalizedString(@"Bitcoin addresses can also be copied to the clipboard. "\
-                                         "A bitcoin address always starts with '1'.", nil)
+#define CLIPBOARD_TIP NSLocalizedString(@"Vertcoin addresses can also be copied to the clipboard. "\
+                                         "A vertcoin address always starts with '1'.", nil)
 
 #define LOCK @"\xF0\x9F\x94\x92" // unicode lock symbol U+1F512 (utf-8)
 #define REDX @"\xE2\x9D\x8C"     // unicode cross mark U+274C, red x emoji (utf-8)
@@ -74,7 +74,7 @@
         usingBlock:^(NSNotification *note) {
             NSURL *url = note.userInfo[@"url"];
             
-            if ([url.scheme isEqual:@"bitcoin"]) {
+            if ([url.scheme isEqual:@"vertcoin"]) {
                 [self confirmRequest:[BRPaymentRequest requestWithURL:url]];
                 return;
             }
@@ -107,7 +107,7 @@
 
                         if (error) {
                             [[[UIAlertView alloc]
-                              initWithTitle:NSLocalizedString(@"couldn't transmit payment to bitcoin network", nil)
+                              initWithTitle:NSLocalizedString(@"couldn't transmit payment to vertcoin network", nil)
                               message:error.localizedDescription delegate:nil
                               cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
                         }
@@ -211,7 +211,7 @@
             [self confirmSweep:request.paymentAddress];
         }
         else {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a valid bitcoin address", nil)
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a valid vertcoin address", nil)
               message:request.paymentAddress delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil)
               otherButtonTitles:nil] show];
             [self cancel:nil];
@@ -259,7 +259,7 @@
     }
     else if (request.amount < TX_MIN_OUTPUT_AMOUNT) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"couldn't make payment", nil)
-          message:[NSString stringWithFormat:NSLocalizedString(@"bitcoin payments can't be less than %@", nil),
+          message:[NSString stringWithFormat:NSLocalizedString(@"vertcoin payments can't be less than %@", nil),
                    [m stringForAmount:TX_MIN_OUTPUT_AMOUNT]] delegate:nil
           cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
         [self cancel:nil];
@@ -341,7 +341,7 @@
 
             [[[UIAlertView alloc] initWithTitle:nil message:[NSString
               stringWithFormat:NSLocalizedString(@"Send %@ (%@) from this private key into your wallet? "
-                                                 "The bitcoin network will receive a fee of %@ (%@).", nil),
+                                                 "The vertcoin network will receive a fee of %@ (%@).", nil),
               [m stringForAmount:amount], [m localCurrencyStringForAmount:amount], [m stringForAmount:fee],
               [m localCurrencyStringForAmount:fee]] delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil)
               otherButtonTitles:[NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:amount],
@@ -463,7 +463,7 @@
     self.clearClipboard = YES;
 
     if (! [req isValid] && ! [s isValidBitcoinPrivateKey] && ! [s isValidBitcoinBIP38Key]) {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"clipboard doesn't contain a valid bitcoin address", nil)
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"clipboard doesn't contain a valid vertcoin address", nil)
           message:nil delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
         [self cancel:nil];
     }
@@ -527,13 +527,13 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 [(id)self.zbarController.cameraOverlayView setImage:[UIImage imageNamed:@"cameraguide.png"]];
 
-                if ([s hasPrefix:@"bitcoin:"] || [request.paymentAddress hasPrefix:@"1"]) {
-                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a valid bitcoin address", nil)
+                if ([s hasPrefix:@"vertcoin:"] || [request.paymentAddress hasPrefix:@"1"]) {
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a valid vertcoin address", nil)
                       message:request.paymentAddress delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil)
                       otherButtonTitles:nil] show];
                 }
                 else {
-                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a bitcoin QR code", nil) message:nil
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a vertcoin QR code", nil) message:nil
                       delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
                 }
             });
@@ -657,7 +657,7 @@
 
     if (! [m.wallet signTransaction:self.tx]) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"couldn't make payment", nil)
-          message:NSLocalizedString(@"error signing bitcoin transaction", nil) delegate:nil
+          message:NSLocalizedString(@"error signing vertcoin transaction", nil) delegate:nil
           cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
         [self cancel:nil];
         return;
