@@ -73,14 +73,14 @@ static const char *dns_seeds[] = {
 };
 
 #else // main net
-
-#define GENESIS_BLOCK_HASH @"000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f".hexToData.reverse
+							 
+#define GENESIS_BLOCK_HASH @"4d96a915f49d40b1e5c2844d1ee2dccb90013a990ccea12c492d22110489f0c4".hexToData.reverse
 
 #define GENESIS_BLOCK [[BRMerkleBlock alloc] initWithBlockHash:GENESIS_BLOCK_HASH version:1\
     prevBlock:@"0000000000000000000000000000000000000000000000000000000000000000".hexToData\
-    merkleRoot:@"3ba3edfd7a7b12b27ac72c3e67768f617fC81bc3888a51323a9fb8aa4b1e5e4a".hexToData\
-    timestamp:1231006505.0 - NSTimeIntervalSince1970 target:0x1d00ffffu nonce:2083236893u totalTransactions:1\
-    hashes:@"3ba3edfd7a7b12b27ac72c3e67768f617fC81bc3888a51323a9fb8aa4b1e5e4a".hexToData flags:@"00".hexToData height:0]
+    merkleRoot:@"4af38ca0e323c0a5226208a73b7589a52c030f234810cf51e13e3249fc0123e7".hexToData\
+    timestamp:1389311371.0 - NSTimeIntervalSince1970 target:0x1e0ffff0 nonce:5749262u totalTransactions:1\
+    hashes:@"4af38ca0e323c0a5226208a73b7589a52c030f234810cf51e13e3249fc0123e7".hexToData flags:@"00".hexToData height:0]
 
 // blockchain checkpoints, these are also used as starting points for partial chain downloads, so they need to be at
 // difficulty transition boundaries in order to verify the block difficulty at the immediately following transition

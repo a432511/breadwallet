@@ -28,7 +28,7 @@
 #if BITCOIN_TESTNET
 #define BITCOIN_MAGIC_NUMBER 0x0709110b
 #else
-#define BITCOIN_MAGIC_NUMBER 0xd9b4bef9
+#define BITCOIN_MAGIC_NUMBER 0xdab5bffa
 #endif
 
 @interface NSMutableData (Bitcoin)

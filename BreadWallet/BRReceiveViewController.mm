@@ -32,7 +32,7 @@
 #import "QREncoder.h"
 
 #define QR_TIP      NSLocalizedString(@"Let others scan this QR code to get your vertcoin address. Anyone can send "\
-                    "bitcoins to your wallet by transferring them to your address.", nil)
+                    "vertcoins to your wallet by transferring them to your address.", nil)
 #define ADDRESS_TIP NSLocalizedString(@"This is your vertcoin address. Tap to copy it or send it by email or sms. The "\
                     "address will change each time you receive funds, but old addresses always work.", nil)
 
