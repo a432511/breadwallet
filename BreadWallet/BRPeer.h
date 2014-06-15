@@ -26,7 +26,7 @@
 #import <Foundation/Foundation.h>
 
 #if BITCOIN_TESTNET
-#define BITCOIN_STANDARD_PORT          18333
+#define BITCOIN_STANDARD_PORT          15889
 #define BITCOIN_REFERENCE_BLOCK_HEIGHT 150000
 #define BITCOIN_REFERENCE_BLOCK_TIME   (1386098130.0 - NSTimeIntervalSince1970)
 #else

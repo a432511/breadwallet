@@ -46,7 +46,7 @@
 
 #if BITCOIN_TESTNET
 
-#define GENESIS_BLOCK_HASH @"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943".hexToData.reverse
+#define GENESIS_BLOCK_HASH @"4d96a915f49d40b1e5c2844d1ee2dccb90013a990ccea12c492d22110489f0c4".hexToData.reverse
 
 // The testnet genesis block uses the mainnet genesis block's merkle root. The hash is wrong using its own root.
 #define GENESIS_BLOCK [[BRMerkleBlock alloc] initWithBlockHash:GENESIS_BLOCK_HASH version:1\
