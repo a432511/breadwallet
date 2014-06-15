@@ -181,6 +181,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
     // check proof-of-work
     BN_init(&target);
     BN_init(&maxTarget);
+
     setCompact(&target, _target);
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
     if (BN_cmp(&target, BN_value_one()) < 0 || BN_cmp(&target, &maxTarget) > 0) return NO; // target out of range
@@ -361,22 +362,41 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
     if (timespan < TARGET_TIMESPAN/4) timespan = TARGET_TIMESPAN/4;
     if (timespan > TARGET_TIMESPAN*4) timespan = TARGET_TIMESPAN*4;
 
+	// Start BigNumber transaction
     BN_CTX_start(ctx);
+	
+	// Initialize target as BigNumber
     BN_init(&target);
+	// Initialize maxTarget as BigNumber
     BN_init(&maxTarget);
+	// Initialize span as BigNumber
     BN_init(&span);
+	// Initialize targetSpan as BigNumber
     BN_init(&targetSpan);
+	// Initialize bn as BigNumber
     BN_init(&bn);
+	
+	// Convert previous.target to BigNumber stored in target
     setCompact(&target, previous.target);
+	// Convert MAX_PROOF_OF_WORK to BigNumber stored in maxTarget
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
+	
+	// Store timespan (word) in span (BigNumber)
     BN_set_word(&span, timespan);
+	// Store TARGET_TIMESPAN (word) in targetSpan (BigNumber)
     BN_set_word(&targetSpan, TARGET_TIMESPAN);
+	// Multiplies target and span such that bn = target * span in the context of the transaction
     BN_mul(&bn, &target, &span, ctx);
+	// Divides bn by targetSpan such that dv = bn / targetSpan in the context of the transaction
     BN_div(&target, NULL, &bn, &targetSpan, ctx);
+	// If target > maxTarget, set target = maxTarget (boundary)
     if (BN_cmp(&target, &maxTarget) > 0) BN_copy(&target, &maxTarget); // limit to MAX_PROOF_OF_WORK
+	
+	// End transaction and free memory
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
     
+	// Is the transaction difficulty = to our calculated difficulty?
     return (_target == getCompact(&target)) ? YES : NO;
 }
 
