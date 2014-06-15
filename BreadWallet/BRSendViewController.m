@@ -41,7 +41,7 @@
 #define SCAN_TIP      NSLocalizedString(@"Scan someone else's QR code to get their vertcoin address. "\
                                          "You can send a payment to anyone with an address.", nil)
 #define CLIPBOARD_TIP NSLocalizedString(@"Vertcoin addresses can also be copied to the clipboard. "\
-                                         "A vertcoin address always starts with '1'.", nil)
+                                         "A vertcoin address always starts with 'V'.", nil)
 
 #define LOCK @"\xF0\x9F\x94\x92" // unicode lock symbol U+1F512 (utf-8)
 #define REDX @"\xE2\x9D\x8C"     // unicode cross mark U+274C, red x emoji (utf-8)
