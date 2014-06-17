@@ -396,13 +396,11 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
     BN_init(&tmp4);
 	
 	for (uint32_t i = 1; current.height > 0; i++) {
-		// TODO: What is this if statement doing?
-		/*
-		if (PastBlocksMax > 0 && ` > PastBlocksMax) 
+	
+		if (pastBlocksMax > 0 && i > pastBlocksMax) 
 		{ 
 			break; 
 		}
-		*/
 		
 		pastBlocksMass++;
 		
@@ -421,7 +419,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 			
 			// tmp3 = (pastDifficultyAverage - pastDifficultyAveragePrev) / i
 			// tmp3 = tmp1 / tmp2
-			BN_div(&tmp3, NULL, &tmp1, &tmp2);
+			BN_div(&tmp3, NULL, &tmp1, &tmp2, ctx);
 			
 			// tmp4 = ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev
 			// tmp4 = tmp3 + pastDifficultyAveragePrev
