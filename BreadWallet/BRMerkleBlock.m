@@ -274,7 +274,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 	}
         
 	for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-		if (PastBlocksMax > 0 && i > PastBlocksMax) 
+		if (PastBlocksMax > 0 && ` > PastBlocksMax) 
 		{ 
 			break; 
 		}
@@ -342,62 +342,136 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 }
 
 */
-- (BOOL)verifyDifficultyFromPreviousBlock:(BRMerkleBlock *)previous andTransitionTime:(NSTimeInterval)time
+- (BOOL)verifyDifficultyFromPreviousBlock:(NSMutableDictionary *)blocks time:(NSTimeInterval)time pastBlocksMin:(uint64)pastBlocksMin pastBlocksMax:(uint64)pastBlocksMax
 {
-    if (! [_prevBlock isEqual:previous.blockHash] || _height != previous.height + 1) return NO;
-    if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) return NO;
+	BRMerkleBlock *current = blocks[_blockHash];
+	BRMerkleBlock *previous = blocks[_prevBlock];
+	
+	// If _prevBlock is not equal to the supplied previous block OR 
+	// the _height is not equal to the supplied previous height + 1
+    if (! [_prevBlock isEqual:previous.blockHash] || _height != previous.height + 1) 
+	{
+		return NO;
+	}
+	
+	// If the current _height is not a multiple of the BLOCK_DIFFICULTY_INTERVAL AND
+	// the time is equal to zero
+    if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) 
+	{
+		return NO;
+	}
 
-#if BITCOIN_TESTNET
-    //TODO: implement testnet difficulty rule check
-    return YES; // don't worry about difficulty on testnet for now
-#endif
-
-    if ((_height % BLOCK_DIFFICULTY_INTERVAL) != 0) return (_target == previous.target) ? YES : NO;
-
-    int32_t timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)time);
-    BIGNUM target, maxTarget, span, targetSpan, bn;
+	#if BITCOIN_TESTNET
+	
+		//TODO: implement testnet difficulty rule check
+		return YES;
+	
+	#endif
+	
+	uint64 pastBlocksMass = 0;
+	BIGNUM pastDifficultyAverage, pastDifficultyAveragePrev, newDiff, maxTarget;
+	double pastRateAdjustmentRatio = 1;
+	double eventHorizonDeviation, eventHorizonDeviationFast, eventHorizonDeviationSlow;
+	
+	// Calculate the time between blocks
+    int32_t timespan = 0, targetSeconds = 0;
+	
+	// Create BigNumber transaction
     BN_CTX *ctx = BN_CTX_new();
-    
-    // limit difficulty transition to -75% or +400%
-    if (timespan < TARGET_TIMESPAN/4) timespan = TARGET_TIMESPAN/4;
-    if (timespan > TARGET_TIMESPAN*4) timespan = TARGET_TIMESPAN*4;
-
+	
 	// Start BigNumber transaction
     BN_CTX_start(ctx);
 	
-	// Initialize target as BigNumber
-    BN_init(&target);
-	// Initialize maxTarget as BigNumber
+	// Initialize BigNumbers
+    BN_init(&pastDifficultyAverage);
+    BN_init(&pastDifficultyAveragePrev);
+    BN_init(&newDiff);
     BN_init(&maxTarget);
-	// Initialize span as BigNumber
-    BN_init(&span);
-	// Initialize targetSpan as BigNumber
-    BN_init(&targetSpan);
-	// Initialize bn as BigNumber
-    BN_init(&bn);
 	
-	// Convert previous.target to BigNumber stored in target
-    setCompact(&target, previous.target);
+	for (unsigned int i = 1; current.height > 0; i++) {
+		// TODO: What is this if statement doing?
+		/*
+		if (PastBlocksMax > 0 && ` > PastBlocksMax) 
+		{ 
+			break; 
+		}
+		*/
+		
+		pastBlocksMass++;
+		
+		setCompact(&pastDifficultyAverage, current.target);
+		if (i != 1)
+		{ 
+			// The BigNumber arithmetic here may not work without using the OpenSSL helper methods (BN_copy, BN_mul, BN_somefunction)
+			setCompact(&pastDifficultyAverage, ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev);
+		}
+		
+		BN_copy(&pastDifficultyAveragePrev, &pastDifficultyAverage);
+		
+		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)current.time)
+		targetSeconds = TARGET_TIMESPAN * pastBlocksMass;
+		pastRateAdjustmentRatio = double(1);
+		
+		if (timespan < 0) 
+		{ 
+			timespan = 0; 
+		}
+		if (timespan != 0 && targetSeconds != 0) 
+		{
+			pastRateAdjustmentRatio = double(targetSeconds) / double(timespan);
+		}
+		eventHorizonDeviation = 1 + (0.7084 * exp((double(pastBlocksMass)/double(144)), -1.228));
+		eventHorizonDeviationFast = eventHorizonDeviation;
+		eventHorizonDeviationSlow = 1 / eventHorizonDeviation;
+		
+		if (pastBlocksMass >= pastBlocksMin) {
+				if ((pastRateAdjustmentRatio <= eventHorizonDeviationSlow) || (pastRateAdjustmentRatio >= eventHorizonDeviationFast)) 
+				{ 
+					// TODO: What does "assert" do?
+					// assert(BlockReading); 
+					break; 
+				}
+		}
+		
+		// We are at the beginning of the block chain?
+		if (previous.prevBlock == [NSNull null]) 
+		{ 
+			// TODO: What does "assert" do?
+			// assert(BlockReading); 
+			break; 
+		}
+		
+		// I suck with pointers... this might be totally wrong
+		// The point is to set the current block to the previous block
+		*current = blocks[current.prevBlock];
+		// and set the previous block to the one before that
+		*previous = blocks[current.prevBlock];
+	}
+	
+	BN_copy(&newDiff, &pastDifficultyAverage);
+	if (pastRateActualSeconds != 0 && pastRateTargetSeconds != 0) {
+			// NOTE: passing the same variable twice by reference may not work!
+			// newDiff = newDiff * pastRateActualSeconds in the context of the transaction
+			BN_mul(&newDiff, &newDiff, &pastRateActualSeconds, ctx);
+			
+			// NOTE: passing the same variable twice by reference may not work!
+			// newDiff = newDiff / pastRateTargetSeconds in the context of the transaction
+			BN_div(&newDiff, NULL, &newDiff, &pastRateTargetSeconds, ctx);
+	}
 	// Convert MAX_PROOF_OF_WORK to BigNumber stored in maxTarget
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
 	
-	// Store timespan (word) in span (BigNumber)
-    BN_set_word(&span, timespan);
-	// Store TARGET_TIMESPAN (word) in targetSpan (BigNumber)
-    BN_set_word(&targetSpan, TARGET_TIMESPAN);
-	// Multiplies target and span such that bn = target * span in the context of the transaction
-    BN_mul(&bn, &target, &span, ctx);
-	// Divides bn by targetSpan such that dv = bn / targetSpan in the context of the transaction
-    BN_div(&target, NULL, &bn, &targetSpan, ctx);
-	// If target > maxTarget, set target = maxTarget (boundary)
-    if (BN_cmp(&target, &maxTarget) > 0) BN_copy(&target, &maxTarget); // limit to MAX_PROOF_OF_WORK
+	// If newDiff > maxTarget, set newDiff = maxTarget (boundary)
+    if (BN_cmp(&newDiff, &maxTarget) > 0) {
+		BN_copy(&newDiff, &maxTarget);
+	}
 	
 	// End transaction and free memory
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
-    
+	
 	// Is the transaction difficulty = to our calculated difficulty?
-    return (_target == getCompact(&target)) ? YES : NO;
+    return (_target == getCompact(&newDiff)) ? YES : NO;
 }
 
 // recursively walks the merkle tree in depth first order, calling leaf(hash, flag) for each stored hash, and
