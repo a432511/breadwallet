@@ -43,6 +43,7 @@
 #define NODE_NETWORK          1  // services value indicating a node offers full blocks, not just headers
 #define PROTOCOL_TIMEOUT      30.0
 #define MAX_CONNENCT_FAILURES 20 // notify user of network problems after this many connect failures in a row
+#define HARD_FORK_DIFFICULTY_CHANGE 26754
 
 #if BITCOIN_TESTNET
 
@@ -874,12 +875,22 @@ static const char *dns_seeds[] = {
     }
 
     // verify block difficulty
-    if (! [block verifyDifficultyFromPreviousBlock:prev andTransitionTime:transitionTime]) {
-        NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
-              block.target, block.blockHash);
-        [self peerMisbehavin:peer];
-        return;
-    }
+	// If we are pasted the hard fork block, use KGW
+	if(block.height >= HARD_FORK_DIFFICULTY_CHANGE){
+		if (! [block verifyDifficultyKimotoGravityWell:blocks time:transitionTime ]) {
+			NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
+				  block.target, block.blockHash);
+			[self peerMisbehavin:peer];
+			return;
+		}
+	} else {
+		if (! [block verifyDifficultyBitcoin:prev time:transitionTime ]) {
+			NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
+				  block.target, block.blockHash);
+			[self peerMisbehavin:peer];
+			return;
+		}
+	}
 
     // verify block chain checkpoints
     if (self.checkpoints[@(block.height)] && ! [block.blockHash isEqual:self.checkpoints[@(block.height)]]) {

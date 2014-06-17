@@ -33,6 +33,7 @@
 #define MAX_PROOF_OF_WORK 0x1d00ffffu   // highest value for difficulty target (higher values are less difficult)
 #define TARGET_TIMESPAN   (2.5*60) 		// the targeted timespan between difficulty target adjustments (2.5 min)
 
+
 // convert difficulty target format to bignum, as per: https://github.com/bitcoin/bitcoin/blob/master/src/uint256.h#L506
 static void setCompact(BIGNUM *bn, uint32_t compact)
 {
@@ -331,10 +332,55 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 
 */
 
+ - (BOOL)verifyDifficultyBitcoin:(BRMerkleBlock *)previous andTransitionTime:(NSTimeInterval)time
+{
+	if (! [_prevBlock isEqual:previous.blockHash] || _height != previous.height + 1) return NO;
+	if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) return NO;
+
+	#if BITCOIN_TESTNET
+		//TODO: implement testnet difficulty rule check
+		return YES; // don't worry about difficulty on testnet for now
+	#endif
+
+	if ((_height % BLOCK_DIFFICULTY_INTERVAL) != 0) return (_target == previous.target) ? YES : NO;
+
+	int32_t timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)time);
+	BIGNUM target, maxTarget, span, targetSpan, bn;
+	BN_CTX *ctx = BN_CTX_new();
+  
+	// limit difficulty transition to -75% or +400%
+	if (timespan < TARGET_TIMESPAN/4) timespan = TARGET_TIMESPAN/4;
+	if (timespan > TARGET_TIMESPAN*4) timespan = TARGET_TIMESPAN*4;
+
+	BN_CTX_start(ctx);
+	BN_init(&target);
+	BN_init(&maxTarget);
+	BN_init(&span);
+	BN_init(&targetSpan);
+	BN_init(&bn);
+	setCompact(&target, previous.target);
+	setCompact(&maxTarget, MAX_PROOF_OF_WORK);
+	BN_set_word(&span, timespan);
+	BN_set_word(&targetSpan, TARGET_TIMESPAN);
+	BN_mul(&bn, &target, &span, ctx);
+	BN_div(&target, NULL, &bn, &targetSpan, ctx);
+	if (BN_cmp(&target, &maxTarget) > 0) BN_copy(&target, &maxTarget); // limit to MAX_PROOF_OF_WORK
+	BN_CTX_end(ctx);
+	BN_CTX_free(ctx);
+  
+	return (_target == getCompact(&target)) ? YES : NO;
+}
+
 // Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
 // height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
-- (BOOL)verifyDifficultyFromPreviousBlock:(NSMutableDictionary *)blocks time:(NSTimeInterval)time pastBlocksMin:(uint64_t)pastBlocksMin pastBlocksMax:(uint64_t)pastBlocksMax
+- (BOOL)verifyDifficultyKimotoGravityWell:(NSMutableDictionary *)blocks time:(NSTimeInterval)time
 {
+	uint32_t timeDaySeconds = 60 * 60 * 24;
+	int64_t pastSecondsMin = timeDaySeconds * 0.25;
+	int64_t pastSecondsMax = timeDaySeconds * 7;
+	uint64_t pastBlocksMin = pastSecondsMin / TARGET_TIMESPAN;
+	uint64_t pastBlocksMax = pastSecondsMax / TARGET_TIMESPAN;
+	
 	BRMerkleBlock *current = blocks[_blockHash];
 	BRMerkleBlock *previous = blocks[_prevBlock];
 	
