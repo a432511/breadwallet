@@ -111,6 +111,7 @@ static uint32_t getCompact(const BIGNUM *bn)
 
     NSUInteger off = 0, l = 0, len = 0;
 
+    // TODO: _blockHash should be derived from scrypt-n instead of double sha256
     _blockHash = [message subdataWithRange:NSMakeRange(0, 80)].SHA256_2;
     _version = [message UInt32AtOffset:off];
     off += sizeof(uint32_t);

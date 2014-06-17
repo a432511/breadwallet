@@ -684,6 +684,9 @@ services:(uint64_t)services
     NSTimeInterval t = [message UInt32AtOffset:l + 81*(count - 1) + 68] - NSTimeIntervalSince1970;
 
     if (count >= 2000 || t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) {
+    
+        // TODO: This may need to change to scrypt-n as well. I am not sure what the usage of firstHash
+        // and lastHash is yet
         NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SHA256_2,
                *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SHA256_2;
 
@@ -695,6 +698,8 @@ services:(uint64_t)services
                 t = [message UInt32AtOffset:off + 81 + 68] - NSTimeIntervalSince1970;
             }
 
+            // TODO: This may need to change to scrypt-n as well. I am not sure what the usage of firstHash
+            // and lastHash is yet
             lastHash = [message subdataWithRange:NSMakeRange(off, 80)].SHA256_2;
 
             NSLog(@"%@:%u calling getblocks with locators: %@", self.host, self.port, @[lastHash, firstHash]);

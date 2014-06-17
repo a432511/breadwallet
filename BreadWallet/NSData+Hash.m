@@ -47,6 +47,8 @@
     return d;
 }
 
+// TODO: Implement Scrypt-N that adheres to the N schedule outlined by the coin spec
+
 - (NSData *)SHA256_2
 {
     NSMutableData *d = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
