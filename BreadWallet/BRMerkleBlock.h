@@ -64,6 +64,8 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 
 // Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
 // height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
-- (BOOL)verifyDifficultyFromPreviousBlock:(BRMerkleBlock*)previous andTransitionTime:(NSTimeInterval)time;
+//- (BOOL)verifyDifficultyFromPreviousBlock:(BRMerkleBlock*)previous andTransitionTime:(NSTimeInterval)time;
+- (BOOL)verifyDifficultyFromPreviousBlock:(NSMutableDictionary *)blocks time:(NSTimeInterval)time pastBlocksMin:(uint64_t)pastBlocksMin pastBlocksMax:(uint64_t)pastBlocksMax;
+
 
 @end

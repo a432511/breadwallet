@@ -874,6 +874,7 @@ static const char *dns_seeds[] = {
     }
 
     // verify block difficulty
+    // TODO: update the method call here, but how do we get pastBlocksMin and pastBlocksMax?
     if (! [block verifyDifficultyFromPreviousBlock:prev andTransitionTime:transitionTime]) {
         NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
               block.target, block.blockHash);
