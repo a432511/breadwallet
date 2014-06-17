@@ -369,7 +369,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 	#endif
 	
 	uint64 pastBlocksMass = 0;
-	BIGNUM pastDifficultyAverage, pastDifficultyAveragePrev, newDiff, maxTarget;
+	BIGNUM pastDifficultyAverage, pastDifficultyAveragePrev, newDiff, maxTarget, tmp1, tmp2, tmp3, tmp4;
 	double pastRateAdjustmentRatio = 1;
 	double eventHorizonDeviation, eventHorizonDeviationFast, eventHorizonDeviationSlow;
 	
@@ -388,7 +388,14 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
     BN_init(&newDiff);
     BN_init(&maxTarget);
 	
-	for (unsigned int i = 1; current.height > 0; i++) {
+	// There has to be a more efficient way to do BigNumber math
+	// than use all these temp variables
+    BN_init(&tmp1);
+    BN_init(&tmp2);
+    BN_init(&tmp3);
+    BN_init(&tmp4);
+	
+	for (uint32_t i = 1; current.height > 0; i++) {
 		// TODO: What is this if statement doing?
 		/*
 		if (PastBlocksMax > 0 && ` > PastBlocksMax) 
@@ -402,8 +409,27 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		setCompact(&pastDifficultyAverage, current.target);
 		if (i != 1)
 		{ 
-			// The BigNumber arithmetic here may not work without using the OpenSSL helper methods (BN_copy, BN_mul, BN_somefunction)
-			setCompact(&pastDifficultyAverage, ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev);
+			// The BigNumber arithmetic requires OpenSSL helper methods (BN_copy, BN_mul, BN_somefunction)
+			// This mess below equates to the following:
+			// pastDifficultyAverage = ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev
+			
+			// tmp1 = pastDifficultyAverage - pastDifficultyAveragePrev
+			BN_sub(&tmp1, &pastDifficultyAverage, &pastDifficultyAveragePrev);
+			
+			// tmp2 = i
+			BN_set_word(&tmp2, i);
+			
+			// tmp3 = (pastDifficultyAverage - pastDifficultyAveragePrev) / i
+			// tmp3 = tmp1 / tmp2
+			BN_div(&tmp3, NULL, &tmp1, &tmp2);
+			
+			// tmp4 = ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev
+			// tmp4 = tmp3 + pastDifficultyAveragePrev
+			BN_add(&tmp4, &tmp3, &pastDifficultyAveragePrev);
+			
+			// pastDifficultyAverage = ((pastDifficultyAverage - pastDifficultyAveragePrev) / i) + pastDifficultyAveragePrev
+			// pastDifficultyAverage = tmp4
+			BN_copy(&pastDifficultyAverage, &tmp4);
 		}
 		
 		BN_copy(&pastDifficultyAveragePrev, &pastDifficultyAverage);
@@ -450,13 +476,11 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 	
 	BN_copy(&newDiff, &pastDifficultyAverage);
 	if (pastRateActualSeconds != 0 && pastRateTargetSeconds != 0) {
-			// NOTE: passing the same variable twice by reference may not work!
-			// newDiff = newDiff * pastRateActualSeconds in the context of the transaction
-			BN_mul(&newDiff, &newDiff, &pastRateActualSeconds, ctx);
+			// tmp1 = newDiff * pastRateActualSeconds in the context of the transaction
+			BN_mul(&tmp1, &newDiff, &pastRateActualSeconds, ctx);
 			
-			// NOTE: passing the same variable twice by reference may not work!
-			// newDiff = newDiff / pastRateTargetSeconds in the context of the transaction
-			BN_div(&newDiff, NULL, &newDiff, &pastRateTargetSeconds, ctx);
+			// newDiff = tmp1 / pastRateTargetSeconds in the context of the transaction
+			BN_div(&newDiff, NULL, &tmp1, &pastRateTargetSeconds, ctx);
 	}
 	// Convert MAX_PROOF_OF_WORK to BigNumber stored in maxTarget
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
