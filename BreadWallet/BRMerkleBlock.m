@@ -282,7 +282,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		PastRateActualSeconds = BlockLastSolved->GetBlockTime() - BlockReading->GetBlockTime();
 		PastRateTargetSeconds = TargetBlocksSpacingSeconds * PastBlocksMass;
 		PastRateAdjustmentRatio = double(1);
-		
+	
 		if (PastRateActualSeconds < 0) 
 		{ 
 			PastRateActualSeconds = 0; 
@@ -333,7 +333,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 
 // Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
 // height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
-- (BOOL)verifyDifficultyFromPreviousBlock:(NSMutableDictionary *)blocks time:(NSTimeInterval)time pastBlocksMin:(uint64)pastBlocksMin pastBlocksMax:(uint64)pastBlocksMax
+- (BOOL)verifyDifficultyFromPreviousBlock:(NSMutableDictionary *)blocks time:(NSTimeInterval)time pastBlocksMin:(uint64_t)pastBlocksMin pastBlocksMax:(uint64_t)pastBlocksMax
 {
 	BRMerkleBlock *current = blocks[_blockHash];
 	BRMerkleBlock *previous = blocks[_prevBlock];
@@ -359,7 +359,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 	
 	#endif
 	
-	uint64 pastBlocksMass = 0;
+	uint64_t pastBlocksMass = 0;
 	BIGNUM pastDifficultyAverage, pastDifficultyAveragePrev, newDiff, maxTarget, tmp1, tmp2, tmp3, tmp4;
 	double pastRateAdjustmentRatio = 1;
 	double eventHorizonDeviation, eventHorizonDeviationFast, eventHorizonDeviationSlow;
@@ -423,9 +423,9 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		
 		BN_copy(&pastDifficultyAveragePrev, &pastDifficultyAverage);
 		
-		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)current.time)
+		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)current.timestamp);
 		targetSeconds = TARGET_TIMESPAN * pastBlocksMass;
-		pastRateAdjustmentRatio = double(1);
+		pastRateAdjustmentRatio = (double)1;
 		
 		if (timespan < 0) 
 		{ 
@@ -433,9 +433,9 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		}
 		if (timespan != 0 && targetSeconds != 0) 
 		{
-			pastRateAdjustmentRatio = double(targetSeconds) / double(timespan);
+			pastRateAdjustmentRatio = (double)(targetSeconds / timespan);
 		}
-		eventHorizonDeviation = 1 + (0.7084 * exp((double(pastBlocksMass)/double(144)), -1.228));
+		eventHorizonDeviation = 1 + (0.7084 * powf((double)(pastBlocksMass/144), -1.228));
 		eventHorizonDeviationFast = eventHorizonDeviation;
 		eventHorizonDeviationSlow = 1 / eventHorizonDeviation;
 		
@@ -449,27 +449,28 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		}
 		
 		// We are at the beginning of the block chain?
-		if (previous.prevBlock == [NSNull null]) 
+		if (!previous.prevBlock)
 		{ 
-			// TODO: What does "assert" do?
+			// TODO: What does "assert" do?   -> assert "throws an exception" if the condition is false.
+            
 			// assert(BlockReading); 
-			break; 
+			break;
 		}
 		
 		// I suck with pointers... this might be totally wrong
 		// The point is to set the current block to the previous block
-		*current = blocks[current.prevBlock];
+		current = blocks[current.prevBlock];
 		// and set the previous block to the one before that
-		*previous = blocks[current.prevBlock];
+		previous = blocks[current.prevBlock];
 	}
 	
 	BN_copy(&newDiff, &pastDifficultyAverage);
-	if (pastRateActualSeconds != 0 && pastRateTargetSeconds != 0) {
+	if (timespan != 0 && targetSeconds != 0) {
 			// tmp1 = newDiff * pastRateActualSeconds in the context of the transaction
-			BN_mul(&tmp1, &newDiff, &pastRateActualSeconds, ctx);
+			BN_mul(&tmp1, &newDiff, &timespan, ctx);
 			
 			// newDiff = tmp1 / pastRateTargetSeconds in the context of the transaction
-			BN_div(&newDiff, NULL, &tmp1, &pastRateTargetSeconds, ctx);
+			BN_div(&newDiff, NULL, &tmp1, &targetSeconds, ctx);
 	}
 	// Convert MAX_PROOF_OF_WORK to BigNumber stored in maxTarget
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
