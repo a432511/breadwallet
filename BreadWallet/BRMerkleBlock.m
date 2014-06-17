@@ -407,7 +407,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 	
 	uint64_t pastBlocksMass = 0;
 	BIGNUM pastDifficultyAverage, pastDifficultyAveragePrev, newDiff, maxTarget, tmp1, tmp2, tmp3, tmp4;
-	double pastRateAdjustmentRatio = 1;
+	double pastRateAdjustmentRatio = (double)1;
 	double eventHorizonDeviation, eventHorizonDeviationFast, eventHorizonDeviationSlow;
 	
 	// Calculate the time between blocks
@@ -479,9 +479,9 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		}
 		if (timespan != 0 && targetSeconds != 0) 
 		{
-			pastRateAdjustmentRatio = (double)(targetSeconds / timespan);
+			pastRateAdjustmentRatio = ((double)targetSeconds / (double)timespan);
 		}
-		eventHorizonDeviation = 1 + (0.7084 * powf((double)(pastBlocksMass/144), -1.228));
+		eventHorizonDeviation = 1 + (0.7084 * powf(((double)pastBlocksMass / (double)144), -1.228));
 		eventHorizonDeviationFast = eventHorizonDeviation;
 		eventHorizonDeviationSlow = 1 / eventHorizonDeviation;
 		
