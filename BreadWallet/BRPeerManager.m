@@ -877,14 +877,14 @@ static const char *dns_seeds[] = {
     // verify block difficulty
 	// If we are pasted the hard fork block, use KGW
 	if(block.height >= HARD_FORK_DIFFICULTY_CHANGE){
-		if (! [block verifyDifficultyKimotoGravityWell:blocks time:transitionTime ]) {
+		if (! [block verifyDifficultyKimotoGravityWell:self.blocks  time:transitionTime ]) {
 			NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
 				  block.target, block.blockHash);
 			[self peerMisbehavin:peer];
 			return;
 		}
 	} else {
-		if (! [block verifyDifficultyBitcoin:prev time:transitionTime ]) {
+		if (! [block verifyDifficultyBitcoin:prev andTransitionTime:transitionTime ]) {
 			NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
 				  block.target, block.blockHash);
 			[self peerMisbehavin:peer];
