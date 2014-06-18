@@ -1,14 +1,16 @@
-![ƀ](/images/icon.png) breadwallet
+![ƀ](/images/icon.png) breadwallet vertcoin port
 ---------------------------------
 
-An [SPV](https://en.bitcoin.it/wiki/Thin_Client_Security#Header-Only_Clients),
-[BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
-deterministic bitcoin wallet for iOS
+This is a port of https://github.com/voisine/breadwallet for vertcoin.
 
-breadwallet is designed to be the simplest, easiest and most secure bitcoin
+An [SPV](https://en.vertcoin.it/wiki/Thin_Client_Security#Header-Only_Clients),
+[BIP32](https://github.com/vertcoin/bips/blob/master/bip-0032.mediawiki)
+deterministic vertcoin wallet for iOS
+
+breadwallet is designed to be the simplest, easiest and most secure vertcoin
 wallet for iOS 
 
-breadwallet is the first true bitcoin wallet for iOS, where you hold your
+breadwallet is the first true vertcoin wallet for iOS, where you hold your
 money right on your own device without relying on any third party service 
 
 ![screenshot1](/images/screenshot1.jpg)
@@ -25,12 +27,12 @@ features:
 ![screenshot3](/images/screenshot3.jpg)
 
 breadwallet uses "simplified payment verification" or
-[SPV](https://en.bitcoin.it/wiki/Thin_Client_Security#Header-Only_Clients) mode
+[SPV](https://en.vertcoin.it/wiki/Thin_Client_Security#Header-Only_Clients) mode
 for fast performance in a mobile environment.
 
 breadwallet is a 
-[BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
-"deterministic" wallet, meaning that all the bitcoin addresses
+[BIP32](https://github.com/vertcoin/bips/blob/master/bip-0032.mediawiki)
+"deterministic" wallet, meaning that all the vertcoin addresses
 and private keys are generated from a single "seed". If you know the seed, you
 can recreate the entire wallet including all balances and transaction history.
 This allows for a single convenient backup that will work forever.
