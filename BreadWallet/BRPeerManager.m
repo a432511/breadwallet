@@ -78,8 +78,22 @@ static const char *dns_seeds[] = {
 // blockchain checkpoints, these are also used as starting points for partial chain downloads, so they need to be at
 // difficulty transition boundaries in order to verify the block difficulty at the immediately following transition
 static const struct { uint32_t height; char *hash; time_t timestamp; uint32_t target; } checkpoint_array[] = {
-	// These used to be checkpoints at block difficulty changes, but I don't think we can use this because
-	// the vertcoin network retargets diff every block
+	// We can really only checkpoint the first few weeks of blocks because difficulty
+    // is now calculated every block
+    {   2016, "81d969f8f0bd5543ce5f506fb2b12be14a8b9f3fea35d88771ce621adbba1125", 1389435044, 0x1e068b1b },
+    {   4032, "985c4aa52b56f8dc349089d1141c0baac24b22aec871d44282b8114c8a0ee989", 1389438911, 0x1e01a2c6 },
+    {   6048, "27e9d16bef0ff7b3addc8c25783aeac9bfc99bf10185a78068bf0eb1dcf5d016", 1389445094, 0x1d68b180 },
+    {   8064, "21156fe43c92249485f234c05b9c654398c57e1e7da2616b790ee275a9e79daa", 1389457522, 0x1d1a2c60 },
+    {  10080, "30a29c5665cad3f9e700d3f551ce51d9014e586710255df47afdb6caa0c34405", 1389494639, 0x1d068b18 },
+    {  12096, "591ddffbc198a456d5ec4bacba7fc96a248785bc0ba8bf9b95865b47f1b018ca", 1389547587, 0x1d01a2c6 },
+    {  14112, "988dc8270fc35e6d85e73d55e349508e575765d14686ee836c9b6ad71da86693", 1389676213, 0x1d00b20c },
+    {  16128, "f708aeb9d32d1cfb99716acbc786d53783a8b4d1402b7291140421d9b0650b02", 1389869038, 0x1c716d34 },
+    {  18144, "8a5ea59616bbd22e982e6e4a4fc53b957d8ca657a6d7a453f79a6df7831eaaa3", 1390194345, 0x1c7a0e1a },
+    {  20160, "3da5330dc1abcce95f918663476e94c9643a3936661cb039a7f585054659bb14", 1390306772, 0x1c2d4966 },
+    {  22176, "8305d2436c79eaf32dbeb5ff7023eabd8cb81bfcdeb1c48ba671cd2ff208edc9", 1390521416, 0x1c203052 },
+    {  24192, "69622465ae61faae7919b462c25219930abab18704e87fea891e895d1f7e9bc6", 1390700454, 0x1c130a52 },
+    {  26208, "0f0b611647a913b0b480e0775ce4239b3834f8395f5572301dd35cdfe7da4344", 1391111035, 0x1c19db0c },
+    {  26754, "2437af587984edda1e674759790ddde602a2816984c000342e690c02137bdb41", 1391176452, 0x1c13b7b2 },
 };
 
 static const char *dns_seeds[] = {
