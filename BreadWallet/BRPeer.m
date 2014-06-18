@@ -669,6 +669,10 @@ services:(uint64_t)services
     }
 }
 
+// It looks like method accepts data that is really just a bunch
+// of block headers appended to eachother. That seems to be confirmed by line 678
+// where the message data length is validated to be a multiple of the standard
+// block header length.
 - (void)acceptHeadersMessage:(NSData *)message
 {
     NSUInteger l, count = (NSUInteger)[message varIntAtOffset:0 length:&l], off;
@@ -685,10 +689,10 @@ services:(uint64_t)services
 
     if (count >= 2000 || t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) {
     
-        // TODO: This may need to change to scrypt-n as well. I am not sure what the usage of firstHash
-        // and lastHash is yet
-        NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SHA256_2,
-               *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SHA256_2;
+        // These variables (firstHash, lastHash) are actually block header hashes.
+        // Therefore we need to implement SCRYPT_N instead of SHA256_2
+        NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SCRYPT_N,
+               *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SCRYPT_N;
 
         if (t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) { // request blocks for the remainder of the chain
             t = [message UInt32AtOffset:l + 81 + 68] - NSTimeIntervalSince1970;
@@ -698,9 +702,7 @@ services:(uint64_t)services
                 t = [message UInt32AtOffset:off + 81 + 68] - NSTimeIntervalSince1970;
             }
 
-            // TODO: This may need to change to scrypt-n as well. I am not sure what the usage of firstHash
-            // and lastHash is yet
-            lastHash = [message subdataWithRange:NSMakeRange(off, 80)].SHA256_2;
+            lastHash = [message subdataWithRange:NSMakeRange(off, 80)].SCRYPT_N;
 
             NSLog(@"%@:%u calling getblocks with locators: %@", self.host, self.port, @[lastHash, firstHash]);
             [self sendGetblocksMessageWithLocators:@[lastHash, firstHash] andHashStop:nil];

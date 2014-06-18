@@ -34,7 +34,6 @@
 #include <string.h>
 #include <openssl/sha.h>
 
-
 static inline uint32_t scrypt_be32dec(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
@@ -280,48 +279,10 @@ void scrypt_N_1_1_256_sp_generic(const char *input, char *output, char *scratchp
 	PBKDF2_SHA256((const uint8_t *)input, 80, B, 128, 1, (uint8_t *)output, 32);
 }
 
-//#if defined(USE_SSE2)
-//#if defined(_M_X64) || defined(__x86_64__) || defined(_M_AMD64) || (defined(MAC_OSX) && defined(__i386__))
-///* Always SSE2 */
-//void scrypt_detect_sse2(unsigned int cpuid_edx)
-//{
-//    printf("scrypt: using scrypt-sse2 as built.\n");
-//}
-//#else
-///* Detect SSE2 */
-//void (*scrypt_N_1_1_256_sp)(const char *input, char *output, char *scratchpad, unsigned char Nfactor);
-//
-//void scrypt_detect_sse2(unsigned int cpuid_edx)
-//{
-//    if (cpuid_edx & 1<<26)
-//    {
-//        scrypt_N_1_1_256_sp = &scrypt_N_1_1_256_sp_sse2;
-//        printf("scrypt: using scrypt-sse2 as detected.\n");
-//    }
-//    else
-//    {
-//        scrypt_N_1_1_256_sp = &scrypt_N_1_1_256_sp_generic;
-//        printf("scrypt: using scrypt-generic, SSE2 unavailable.\n");
-//    }
-//}
-//#endif
-//#endif
-
 void scrypt_N_1_1_256(const char *input, char *output, unsigned char Nfactor)
 {
 	char scratchpad[((1 << (Nfactor + 1)) * 128 ) + 63];
-//#if defined(USE_SSE2)
-//        // Detection would work, but in cases where we KNOW it always has SSE2,
-//        // it is faster to use directly than to use a function pointer or conditional.
-//#if defined(_M_X64) || defined(__x86_64__) || defined(_M_AMD64) || (defined(MAC_OSX) && defined(__i386__))
-//        // Always SSE2: x86_64 or Intel MacOS X
-//        scrypt_N_1_1_256_sp_sse2(input, output, scratchpad, Nfactor);
-//#else
-//        // Detect SSE2: 32bit x86 Linux or Windows
-//        scrypt_N_1_1_256_sp(input, output, scratchpad, Nfactor);
-//#endif
-//#else
-        // Generic scrypt
-        scrypt_N_1_1_256_sp_generic(input, output, scratchpad, Nfactor);
-//#endif
+    
+    // Generic scrypt
+    scrypt_N_1_1_256_sp_generic(input, output, scratchpad, Nfactor);
 }
