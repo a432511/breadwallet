@@ -25,7 +25,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define BLOCK_DIFFICULTY_INTERVAL 1      // number of blocks between difficulty target adjustments
+#define BITCOIN_BLOCK_DIFFICULTY_INTERVAL 2016      // number of blocks between difficulty target adjustments
+#define HARD_FORK_BLOCK_DIFFICULTY_INTERVAL 1
 #define BLOCK_UNKOWN_HEIGHT       INT32_MAX
 
 @interface BRMerkleBlock : NSObject
@@ -63,11 +64,11 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 - (BOOL)containsTxHash:(NSData *)txHash;
 
 // Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
-// height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
+// height is not a multiple of BITCOIN_BLOCK_DIFFICULTY_INTERVAL.
  - (BOOL)verifyDifficultyBitcoin:(BRMerkleBlock *)previous andTransitionTime:(NSTimeInterval)time;
  
 // Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
-// height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
+// height is not a multiple of HARD_FORK_BLOCK_DIFFICULTY_INTERVAL.
 - (BOOL)verifyDifficultyKimotoGravityWell:(NSMutableDictionary *)blocks time:(NSTimeInterval)time;
 
 @end

@@ -335,14 +335,14 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
  - (BOOL)verifyDifficultyBitcoin:(BRMerkleBlock *)previous andTransitionTime:(NSTimeInterval)time
 {
 	if (! [_prevBlock isEqual:previous.blockHash] || _height != previous.height + 1) return NO;
-	if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) return NO;
+	if ((_height % BITCOIN_BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) return NO;
 
 	#if BITCOIN_TESTNET
 		//TODO: implement testnet difficulty rule check
 		return YES; // don't worry about difficulty on testnet for now
 	#endif
 
-	if ((_height % BLOCK_DIFFICULTY_INTERVAL) != 0) return (_target == previous.target) ? YES : NO;
+	if ((_height % BITCOIN_BLOCK_DIFFICULTY_INTERVAL) != 0) return (_target == previous.target) ? YES : NO;
 
 	int32_t timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)time);
 	BIGNUM target, maxTarget, span, targetSpan, bn;
@@ -391,9 +391,9 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const CBloc
 		return NO;
 	}
 	
-	// If the current _height is not a multiple of the BLOCK_DIFFICULTY_INTERVAL AND
+	// If the current _height is not a multiple of the HARD_FORK_BLOCK_DIFFICULTY_INTERVAL AND
 	// the time is equal to zero
-    if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) 
+    if ((_height % HARD_FORK_BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) 
 	{
 		return NO;
 	}

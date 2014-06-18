@@ -338,12 +338,19 @@ static const char *dns_seeds[] = {
     self.filterUpdateHeight = self.lastBlockHeight;
     self.filterFpRate = BLOOM_DEFAULT_FALSEPOSITIVE_RATE;
 
-    if (self.lastBlockHeight + BLOCK_DIFFICULTY_INTERVAL < self.downloadPeer.lastblock) {
+    uint32_t blockDifficultyInterval = 0;
+    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+    } else {
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+    }
+    
+    if (self.lastBlockHeight + blockDifficultyInterval < self.downloadPeer.lastblock) {
         self.filterFpRate = BLOOM_REDUCED_FALSEPOSITIVE_RATE; // lower false positive rate during chain sync
     }
     else if (self.lastBlockHeight < self.downloadPeer.lastblock) { // partially lower fp rate if we're nearly synced
         self.filterFpRate -= (BLOOM_DEFAULT_FALSEPOSITIVE_RATE - BLOOM_REDUCED_FALSEPOSITIVE_RATE)*
-                             (self.downloadPeer.lastblock - self.lastBlockHeight)/BLOCK_DIFFICULTY_INTERVAL;
+                             (self.downloadPeer.lastblock - self.lastBlockHeight)/blockDifficultyInterval;
     }
 
     BRWallet *w = [[BRWalletManager sharedInstance] wallet];
@@ -858,11 +865,18 @@ static const char *dns_seeds[] = {
     }
 
     block.height = prev.height + 1;
+    
+    uint32_t blockDifficultyInterval = 0;
+    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+    } else {
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+    }
 
-    if ((block.height % BLOCK_DIFFICULTY_INTERVAL) == 0) { // hit a difficulty transition, find previous transition time
+    if ((block.height % blockDifficultyInterval) == 0) { // hit a difficulty transition, find previous transition time
         BRMerkleBlock *b = block;
 
-        for (uint32_t i = 0; b && i < BLOCK_DIFFICULTY_INTERVAL; i++) {
+        for (uint32_t i = 0; b && i < blockDifficultyInterval; i++) {
             b = self.blocks[b.prevBlock];
         }
 

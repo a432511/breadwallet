@@ -405,8 +405,15 @@ services:(uint64_t)services
     }
 
     [self.requestedBlockHashes addObjectsFromArray:blockHashes];
+    
+    uint32_t blockDifficultyInterval = 0;
+    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+    } else {
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+    }
 
-    if (self.filterBlockCount + blockHashes.count > BLOCK_DIFFICULTY_INTERVAL) {
+    if (self.filterBlockCount + blockHashes.count > blockDifficultyInterval) {
         NSLog(@"%@:%d rebuilding bloom filter after %d blocks", self.host, self.port, self.filterBlockCount);
         [self sendFilterloadMessage:[self.delegate peerBloomFilter:self]];
     }
