@@ -354,10 +354,12 @@ static const char *dns_seeds[] = {
     self.filterFpRate = BLOOM_DEFAULT_FALSEPOSITIVE_RATE;
 
     uint32_t blockDifficultyInterval = 0;
+
+    
     if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
     
     if (self.lastBlockHeight + blockDifficultyInterval < self.downloadPeer.lastblock) {
@@ -522,9 +524,9 @@ static const char *dns_seeds[] = {
     
     uint32_t blockDifficultyInterval = 0;
     if(blockHeight >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if (blockHeight >= self.lastBlockHeight - blockDifficultyInterval) { // recent block we have the header for
@@ -927,9 +929,9 @@ static const char *dns_seeds[] = {
     
     uint32_t blockDifficultyInterval = 0;
     if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if ((block.height % blockDifficultyInterval) == 0) { // hit a difficulty transition, find previous transition time
