@@ -408,9 +408,9 @@ services:(uint64_t)services
     
     uint32_t blockDifficultyInterval = 0;
     if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if (self.filterBlockCount + blockHashes.count > blockDifficultyInterval) {
@@ -698,8 +698,9 @@ services:(uint64_t)services
     
         // These variables (firstHash, lastHash) are actually block header hashes.
         // Therefore we need to implement SCRYPT_N instead of SHA256_2
-        NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SCRYPT_N,
-               *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SCRYPT_N;
+		
+		BRMerkleBlock *firstBlock = [BRMerkleBlock blockWithMessage:[message subdataWithRange:NSMakeRange(l, 80)]];
+		BRMerkleBlock *lastBlock = [BRMerkleBlock blockWithMessage:[message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)]];
 
         if (t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) { // request blocks for the remainder of the chain
             t = [message UInt32AtOffset:l + 81 + 68] - NSTimeIntervalSince1970;
@@ -709,12 +710,12 @@ services:(uint64_t)services
                 t = [message UInt32AtOffset:off + 81 + 68] - NSTimeIntervalSince1970;
             }
 
-            lastHash = [message subdataWithRange:NSMakeRange(off, 80)].SCRYPT_N;
+			lastBlock = [BRMerkleBlock blockWithMessage:[message subdataWithRange:NSMakeRange(off, 80)]];
 
-            NSLog(@"%@:%u calling getblocks with locators: %@", self.host, self.port, @[lastHash, firstHash]);
-            [self sendGetblocksMessageWithLocators:@[lastHash, firstHash] andHashStop:nil];
+            NSLog(@"%@:%u calling getblocks with locators: %@", self.host, self.port, @[lastBlock.blockHash, firstBlock.blockHash]);
+            [self sendGetblocksMessageWithLocators:@[lastBlock.blockHash, firstBlock.blockHash] andHashStop:nil];
         }
-        else [self sendGetheadersMessageWithLocators:@[lastHash, firstHash] andHashStop:nil];
+        else [self sendGetheadersMessageWithLocators:@[lastBlock.blockHash, firstBlock.blockHash] andHashStop:nil];
     }
 
     NSLog(@"%@:%u got %u headers", self.host, self.port, (int)count);

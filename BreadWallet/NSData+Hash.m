@@ -50,13 +50,11 @@
 
 // TODO: test if SCRYPT_N implementation is correct
 
-- (NSData *)SCRYPT_N
+- (NSData *)SCRYPT_N:(int64_t) timestamp
 {
     #define SCRYPT_DIGEST_LENGTH 32
-    #define N_FACTOR 2048 //TODO: change this to be computed from timestamp sometime in the next 2 years
     NSMutableData *d = [NSMutableData dataWithLength:SCRYPT_DIGEST_LENGTH];
-    unsigned char n_factor = (unsigned char)N_FACTOR;
-    scrypt_N_1_1_256(self.bytes, d.mutableBytes, n_factor);
+    scrypt_N_1_1_256(self.bytes, d.mutableBytes, timestamp);
     return d;
 }
 

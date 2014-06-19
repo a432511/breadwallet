@@ -43,7 +43,6 @@
 #define NODE_NETWORK          1  // services value indicating a node offers full blocks, not just headers
 #define PROTOCOL_TIMEOUT      30.0
 #define MAX_CONNENCT_FAILURES 20 // notify user of network problems after this many connect failures in a row
-#define HARD_FORK_DIFFICULTY_CHANGE 26754
 
 #if BITCOIN_TESTNET
 
@@ -354,10 +353,12 @@ static const char *dns_seeds[] = {
     self.filterFpRate = BLOOM_DEFAULT_FALSEPOSITIVE_RATE;
 
     uint32_t blockDifficultyInterval = 0;
-    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+
+    
+    if(self.lastBlockHeight >= HARD_FORK_DIFFICULTY_CHANGE){
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
     
     if (self.lastBlockHeight + blockDifficultyInterval < self.downloadPeer.lastblock) {
@@ -522,9 +523,9 @@ static const char *dns_seeds[] = {
     
     uint32_t blockDifficultyInterval = 0;
     if(blockHeight >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if (blockHeight >= self.lastBlockHeight - blockDifficultyInterval) { // recent block we have the header for
@@ -926,10 +927,10 @@ static const char *dns_seeds[] = {
     block.height = prev.height + 1;
     
     uint32_t blockDifficultyInterval = 0;
-    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+    if(block.height >= HARD_FORK_DIFFICULTY_CHANGE){
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if ((block.height % blockDifficultyInterval) == 0) { // hit a difficulty transition, find previous transition time

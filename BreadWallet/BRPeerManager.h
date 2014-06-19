@@ -31,6 +31,7 @@
 #define BRPeerManagerSyncFailedNotification   @"BRPeerManagerSyncFailedNotification"
 #define BRPeerManagerTxStatusNotification     @"BRPeerManagerTxStatusNotification"
 
+
 @class BRTransaction;
 
 @interface BRPeerManager : NSObject<BRPeerDelegate>
