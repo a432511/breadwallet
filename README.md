@@ -1,5 +1,5 @@
 ![ƀ](/images/icon.png) breadwallet vertcoin port
----------------------------------
+----------------------------------
 
 This is a port of https://github.com/voisine/breadwallet for vertcoin.
 
@@ -27,11 +27,11 @@ features:
 ![screenshot3](/images/screenshot3.jpg)
 
 breadwallet uses "simplified payment verification" or
-[SPV](https://en.vertcoin.it/wiki/Thin_Client_Security#Header-Only_Clients) mode
+[SPV](https://en.bitcoin.it/wiki/Thin_Client_Security#Header-Only_Clients) mode
 for fast performance in a mobile environment.
 
 breadwallet is a 
-[BIP32](https://github.com/vertcoin/bips/blob/master/bip-0032.mediawiki)
+[BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 "deterministic" wallet, meaning that all the vertcoin addresses
 and private keys are generated from a single "seed". If you know the seed, you
 can recreate the entire wallet including all balances and transaction history.
