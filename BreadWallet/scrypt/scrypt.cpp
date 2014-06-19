@@ -36,6 +36,9 @@
 
 static const int64 nChainStartTime = 1389306217;
 
+static const unsigned char minNfactor = 10;
+static const unsigned char maxNfactor = 30;
+
 static inline unsigned char GetNfactor(int64 nTimestamp) {
     int l = 0;
 
