@@ -408,9 +408,9 @@ services:(uint64_t)services
     
     uint32_t blockDifficultyInterval = 0;
     if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
-        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
-        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL
+        blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
     }
 
     if (self.filterBlockCount + blockHashes.count > blockDifficultyInterval) {

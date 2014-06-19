@@ -28,6 +28,8 @@
 #define BITCOIN_BLOCK_DIFFICULTY_INTERVAL 2016      // number of blocks between difficulty target adjustments
 #define HARD_FORK_BLOCK_DIFFICULTY_INTERVAL 1
 #define BLOCK_UNKOWN_HEIGHT       INT32_MAX
+#define HARD_FORK_DIFFICULTY_CHANGE 26754
+
 
 @interface BRMerkleBlock : NSObject
 

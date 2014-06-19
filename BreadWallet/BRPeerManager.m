@@ -43,7 +43,6 @@
 #define NODE_NETWORK          1  // services value indicating a node offers full blocks, not just headers
 #define PROTOCOL_TIMEOUT      30.0
 #define MAX_CONNENCT_FAILURES 20 // notify user of network problems after this many connect failures in a row
-#define HARD_FORK_DIFFICULTY_CHANGE 26754
 
 #if BITCOIN_TESTNET
 
@@ -356,7 +355,7 @@ static const char *dns_seeds[] = {
     uint32_t blockDifficultyInterval = 0;
 
     
-    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
+    if(self.lastBlockHeight >= HARD_FORK_DIFFICULTY_CHANGE){
         blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
         blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
@@ -928,7 +927,7 @@ static const char *dns_seeds[] = {
     block.height = prev.height + 1;
     
     uint32_t blockDifficultyInterval = 0;
-    if(self.currentBlock.height >= HARD_FORK_DIFFICULTY_CHANGE){
+    if(block.height >= HARD_FORK_DIFFICULTY_CHANGE){
         blockDifficultyInterval = HARD_FORK_BLOCK_DIFFICULTY_INTERVAL;
     } else {
         blockDifficultyInterval = BITCOIN_BLOCK_DIFFICULTY_INTERVAL;
