@@ -5,8 +5,8 @@
 /* Class = "IBUINavigationItem"; title = "ƀ 0.00 ($0.00)"; ObjectID = "3hG-i3-g4Y"; */
 "3hG-i3-g4Y.title" = "ƀ 0.00 ($0.00)";
 
-/* Class = "IBUILabel"; text = "WRITE IT DOWN and keep it safe. Lose it and you may lose your bitcoins forever."; ObjectID = "4qK-j7-SlQ"; */
-"4qK-j7-SlQ.text" = "WRITE IT DOWN and keep it safe. Lose it and you may lose your bitcoins forever.";
+/* Class = "IBUILabel"; text = "WRITE IT DOWN and keep it safe. Lose it and you may lose your vertcoins forever."; ObjectID = "4qK-j7-SlQ"; */
+"4qK-j7-SlQ.text" = "WRITE IT DOWN and keep it safe. Lose it and you may lose your vertcoins forever.";
 
 /* Class = "IBUIButton"; normalTitle = "restore from backup"; ObjectID = "4w7-k8-9wY"; */
 "4w7-k8-9wY.normalTitle" = "restore from backup";
@@ -62,8 +62,8 @@
 /* Class = "IBUILabel"; text = "not connected"; ObjectID = "UyF-OV-QVY"; */
 "UyF-OV-QVY.text" = "not connected";
 
-/* Class = "IBUIButton"; normalTitle = "1WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"; ObjectID = "XV7-2s-hZs"; */
-"XV7-2s-hZs.normalTitle" = "1WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+/* Class = "IBUIButton"; normalTitle = "VWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"; ObjectID = "XV7-2s-hZs"; */
+"XV7-2s-hZs.normalTitle" = "VWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
 
 /* Class = "IBUILabel"; text = "Enter this wallet's backup phrase to wipe it and start/restore another. Your current balance remains on this phrase."; ObjectID = "YC6-rN-4P5"; */
 "YC6-rN-4P5.text" = "Enter this wallet's backup phrase to wipe it and start/restore another. Your current balance remains on this phrase.";
@@ -71,8 +71,8 @@
 /* Class = "IBUILabel"; text = "($0.00)"; ObjectID = "ZH0-Ng-7xb"; */
 "ZH0-Ng-7xb.text" = "($0.00)";
 
-/* Class = "IBUILabel"; text = "to: 1WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"; ObjectID = "ZXO-dD-jiQ"; */
-"ZXO-dD-jiQ.text" = "to: 1WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+/* Class = "IBUILabel"; text = "to: VWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"; ObjectID = "ZXO-dD-jiQ"; */
+"ZXO-dD-jiQ.text" = "to: VWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
 
 /* Class = "IBUIButton"; normalTitle = "4"; ObjectID = "b8y-tJ-xAB"; */
 "b8y-tJ-xAB.normalTitle" = "4";
@@ -116,8 +116,8 @@
 /* Class = "IBUILabel"; text = "send money:"; ObjectID = "l5l-JR-LKA"; */
 "l5l-JR-LKA.text" = "send money:";
 
-/* Class = "IBUILabel"; text = "KEEP IT SECRET. Anyone who sees your backup phrase can spend your bitcoins."; ObjectID = "nEz-ij-2aZ"; */
-"nEz-ij-2aZ.text" = "KEEP IT SECRET. Anyone who sees your backup phrase can spend your bitcoins.";
+/* Class = "IBUILabel"; text = "KEEP IT SECRET. Anyone who sees your backup phrase can spend your vertcoins."; ObjectID = "nEz-ij-2aZ"; */
+"nEz-ij-2aZ.text" = "KEEP IT SECRET. Anyone who sees your backup phrase can spend your vertcoins.";
 
 /* Class = "IBUILabel"; text = "Title"; ObjectID = "ncN-gc-vpQ"; */
 "ncN-gc-vpQ.text" = "Title";
@@ -137,8 +137,8 @@
 /* Class = "IBUILabel"; text = "receive money:"; ObjectID = "qel-3J-2VC"; */
 "qel-3J-2VC.text" = "receive money:";
 
-/* Class = "IBUILabel"; text = "breadwallet v%ver%\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttp://breadwallet.com"; ObjectID = "uvz-hk-Nr4"; */
-"uvz-hk-Nr4.text" = "breadwallet v%ver%\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttp://breadwallet.com";
+/* Class = "IBUILabel"; text = "breadwallet v%ver%\nCopyright © 2014 Adam Rivera\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttps://github.com/a432511/breadwallet\nhttps://github.com/voisine/breadwallet"; ObjectID = "uvz-hk-Nr4"; */
+"uvz-hk-Nr4.text" = "breadwallet v%ver%\nCopyright © 2014 Adam Rivera\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttps://github.com/a432511/breadwallet\nhttps://github.com/voisine/breadwallet";
 
 /* Class = "IBUILabel"; text = "Start a new wallet by generating a wallet backup phrase."; ObjectID = "wDZ-DN-szv"; */
 "wDZ-DN-szv.text" = "Start a new wallet by generating a wallet backup phrase.";
