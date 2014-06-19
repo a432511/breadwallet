@@ -34,6 +34,34 @@
 #include <string.h>
 #include <openssl/sha.h>
 
+static const int64 nChainStartTime = 1389306217;
+
+static inline unsigned char GetNfactor(int64 nTimestamp) {
+    int l = 0;
+
+    if (nTimestamp <= nChainStartTime)
+        return minNfactor;
+
+    int64 s = nTimestamp - nChainStartTime;
+    while ((s >> 1) > 3) {
+      l += 1;
+      s >>= 1;
+    }
+
+    s &= 3;
+
+    int n = (l * 158 + s * 28 - 2670) / 100;
+
+    if (n < 0) n = 0;
+
+    if (n > 255)
+        printf( "GetNfactor(%lld) - something wrong(n == %d)\n", nTimestamp, n );
+
+    unsigned char N = (unsigned char) n;
+
+    return min(max(N, minNfactor), maxNfactor);
+}
+
 static inline uint32_t scrypt_be32dec(const void *pp)
 {
 	const uint8_t *p = (uint8_t const *)pp;
@@ -279,8 +307,10 @@ void scrypt_N_1_1_256_sp_generic(const char *input, char *output, char *scratchp
 	PBKDF2_SHA256((const uint8_t *)input, 80, B, 128, 1, (uint8_t *)output, 32);
 }
 
-void scrypt_N_1_1_256(const char *input, char *output, unsigned char Nfactor)
+void scrypt_N_1_1_256(const char *input, char *output, int64 nTimestamp)
 {
+	unsigned char Nfactor = GetNfactor(nTimestamp);
+	
 	char scratchpad[((1 << (Nfactor + 1)) * 128 ) + 63];
     
     // Generic scrypt

@@ -10,13 +10,12 @@ extern "C" {
 
 static const int SCRYPT_SCRATCHPAD_SIZE = 131072 + 63;
 
-void scrypt_N_1_1_256(const char *input, char *output, unsigned char Nfactor);
+void scrypt_N_1_1_256(const char *input, char *output, int64 nTimestamp);
 void scrypt_N_1_1_256_sp_generic(const char *input, char *output, char *scratchpad, unsigned char Nfactor);
 
 void
 PBKDF2_SHA256(const uint8_t *passwd, size_t passwdlen, const uint8_t *salt,
     size_t saltlen, uint64_t c, uint8_t *buf, size_t dkLen);
-
 
 static inline uint32_t scrypt_le32dec(const void *pp)
 {

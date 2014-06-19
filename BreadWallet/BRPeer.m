@@ -698,8 +698,15 @@ services:(uint64_t)services
     
         // These variables (firstHash, lastHash) are actually block header hashes.
         // Therefore we need to implement SCRYPT_N instead of SHA256_2
-        NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SCRYPT_N,
-               *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SCRYPT_N;
+			
+		NSUInteger timestampOffset = sizeof(uint32_t) + CC_SHA256_DIGEST_LENGTH + CC_SHA256_DIGEST_LENGTH;
+		NSTimeInterval timestamp = [message UInt32AtOffset:timestampOffset] - NSTimeIntervalSince1970;
+		
+        NSData *firstHash = [message subdataWithRange:NSMakeRange(l, 80)].SCRYPT_N(timestamp);
+		
+		timestamp = [message UInt32AtOffset:(l + 81*(count - 1)) + timestampOffset] - NSTimeIntervalSince1970;
+		
+        NSData *lastHash = [message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SCRYPT_N.(timestamp);
 
         if (t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) { // request blocks for the remainder of the chain
             t = [message UInt32AtOffset:l + 81 + 68] - NSTimeIntervalSince1970;

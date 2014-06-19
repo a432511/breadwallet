@@ -111,7 +111,6 @@ static uint32_t getCompact(const BIGNUM *bn)
 
     NSUInteger off = 0, l = 0, len = 0;
 
-    _blockHash = [message subdataWithRange:NSMakeRange(0, 80)].SCRYPT_N;
     _version = [message UInt32AtOffset:off];
     off += sizeof(uint32_t);
     _prevBlock = [message hashAtOffset:off];
@@ -132,6 +131,8 @@ static uint32_t getCompact(const BIGNUM *bn)
     off += len;
     _flags = [message dataAtOffset:off length:&l];
     _height = BLOCK_UNKOWN_HEIGHT;
+	
+    _blockHash = [message subdataWithRange:NSMakeRange(0, 80)].SCRYPT_N(_timestamp);
 
     return self;
 }
