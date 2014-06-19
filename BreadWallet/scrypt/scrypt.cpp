@@ -27,6 +27,10 @@
  * online backup system.
  */
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
+
 #include "scrypt.h"
 #include "util.h"
 #include <stdlib.h>
@@ -34,18 +38,18 @@
 #include <string.h>
 #include <openssl/sha.h>
 
-static const int64 nChainStartTime = 1389306217;
+static const int64_t nChainStartTime = 1389306217;
 
 static const unsigned char minNfactor = 10;
 static const unsigned char maxNfactor = 30;
 
-static inline unsigned char GetNfactor(int64 nTimestamp) {
+static inline unsigned char GetNfactor(int64_t nTimestamp) {
     int l = 0;
 
     if (nTimestamp <= nChainStartTime)
         return minNfactor;
 
-    int64 s = nTimestamp - nChainStartTime;
+    int64_t s = nTimestamp - nChainStartTime;
     while ((s >> 1) > 3) {
       l += 1;
       s >>= 1;
@@ -53,16 +57,19 @@ static inline unsigned char GetNfactor(int64 nTimestamp) {
 
     s &= 3;
 
-    int n = (l * 158 + s * 28 - 2670) / 100;
+    long long n = (l * 158 + s * 28 - 2670) / 100;
 
     if (n < 0) n = 0;
 
     if (n > 255)
-        printf( "GetNfactor(%lld) - something wrong(n == %d)\n", nTimestamp, n );
+    {
+//        printf( "GetNfactor(%lld) - something wrong(n == %d)\n", nTimestamp, n );
+        //compiler doesn't recognize printf, putting a breakpoint here instead
 
+    }
     unsigned char N = (unsigned char) n;
 
-    return min(max(N, minNfactor), maxNfactor);
+    return MIN(MAX(N, minNfactor), maxNfactor);
 }
 
 static inline uint32_t scrypt_be32dec(const void *pp)
@@ -310,7 +317,7 @@ void scrypt_N_1_1_256_sp_generic(const char *input, char *output, char *scratchp
 	PBKDF2_SHA256((const uint8_t *)input, 80, B, 128, 1, (uint8_t *)output, 32);
 }
 
-void scrypt_N_1_1_256(const char *input, char *output, int64 nTimestamp)
+void scrypt_N_1_1_256(const char *input, char *output, int64_t nTimestamp)
 {
 	unsigned char Nfactor = GetNfactor(nTimestamp);
 	

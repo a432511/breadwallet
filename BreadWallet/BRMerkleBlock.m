@@ -132,7 +132,7 @@ static uint32_t getCompact(const BIGNUM *bn)
     _flags = [message dataAtOffset:off length:&l];
     _height = BLOCK_UNKOWN_HEIGHT;
 	
-    _blockHash = [message subdataWithRange:NSMakeRange(0, 80)].SCRYPT_N(_timestamp);
+    _blockHash = [[message subdataWithRange:NSMakeRange(0, 80)] SCRYPT_N:_timestamp];
 
     return self;
 }

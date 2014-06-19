@@ -50,7 +50,7 @@
 
 // TODO: test if SCRYPT_N implementation is correct
 
-- (NSData *)SCRYPT_N(int64_t timestamp)
+- (NSData *)SCRYPT_N:(int64_t) timestamp
 {
     #define SCRYPT_DIGEST_LENGTH 32
     NSMutableData *d = [NSMutableData dataWithLength:SCRYPT_DIGEST_LENGTH];

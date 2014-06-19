@@ -31,7 +31,7 @@
 - (NSData *)SHA1;
 - (NSData *)SHA256;
 // TODO: test if SCRYPT_N implementation is correct
-- (NSData *)SCRYPT_N;
+- (NSData *)SCRYPT_N:(int64_t) timestamp;
 
 
 - (NSData *)SHA256_2;

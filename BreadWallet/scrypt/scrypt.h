@@ -10,7 +10,7 @@ extern "C" {
 
 static const int SCRYPT_SCRATCHPAD_SIZE = 131072 + 63;
 
-void scrypt_N_1_1_256(const char *input, char *output, int64 nTimestamp);
+void scrypt_N_1_1_256(const char *input, char *output, int64_t nTimestamp);
 void scrypt_N_1_1_256_sp_generic(const char *input, char *output, char *scratchpad, unsigned char Nfactor);
 
 void
