@@ -59,6 +59,7 @@
 #define BASE_URL    @"https://blockchain.info"
 #define UNSPENT_URL BASE_URL "/unspent?active="
 #define TICKER_URL  BASE_URL "/ticker"
+#define VTC_BTC_TICKER_URL @"http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=151"
 
 static BOOL setKeychainData(NSData *data, NSString *key)
 {
@@ -260,50 +261,78 @@ static NSData *getKeychainData(NSString *key)
     [self performSelector:@selector(updateExchangeRate) withObject:nil afterDelay:60.0];
 
     if (self.reachability.currentReachabilityStatus == NotReachable) return;
-
-    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:TICKER_URL]
-                         cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
-
-    [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
+    
+    NSURLRequest *vtcBtcReq = [NSURLRequest requestWithURL:[NSURL URLWithString:VTC_BTC_TICKER_URL]
+                                            cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+    
+    [NSURLConnection sendAsynchronousRequest:vtcBtcReq queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (connectionError) {
             NSLog(@"%@", connectionError);
             return;
         }
-
-        NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
         NSError *error = nil;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        NSString *currencyCode = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode];
-        NSString *symbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
-
-        if (error || ! [json isKindOfClass:[NSDictionary class]] ||
-            ! [json[DEFAULT_CURRENCY_CODE] isKindOfClass:[NSDictionary class]] ||
-            ! [json[DEFAULT_CURRENCY_CODE][@"last"] isKindOfClass:[NSNumber class]] ||
-            ([json[currencyCode] isKindOfClass:[NSDictionary class]] &&
-             ! [json[currencyCode][@"last"] isKindOfClass:[NSNumber class]])) {
-            NSLog(@"unexpected response from blockchain.info:\n%@",
-                  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            return;
-        }
-
-        if (! [json[currencyCode] isKindOfClass:[NSDictionary class]]) { // if local currency is missing, use default
-            currencyCode = DEFAULT_CURRENCY_CODE;
-            symbol = DEFAULT_CURRENCY_SYMBOL;
-        }
-
-        [defs setObject:symbol forKey:LOCAL_CURRENCY_SYMBOL_KEY];
-        [defs setObject:currencyCode forKey:LOCAL_CURRENCY_CODE_KEY];
-        [defs setObject:json[currencyCode][@"last"] forKey:LOCAL_CURRENCY_PRICE_KEY];
-        [defs synchronize];
-        NSLog(@"exchange rate updated to %@/%@", [self localCurrencyStringForAmount:SATOSHIS],
-              [self stringForAmount:SATOSHIS]);
-
-        if (! self.wallet) return;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:BRWalletBalanceChangedNotification object:nil];
-        });
+        if (error || ! [json isKindOfClass:[NSDictionary class]] ||
+            ! [json[@"return"] isKindOfClass:[NSDictionary class]] ||
+            ! [json[@"return"][@"markets"] isKindOfClass:[NSDictionary class]] ||
+            ! [json[@"return"][@"markets"][@"VTC"] isKindOfClass:[NSDictionary class]] ||
+            ! [json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"] isKindOfClass:[NSNumber class]]) {
+                NSLog(@"unexpected response from pubapi.cryptsy.com:\n%@",
+                      [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                return;
+            }
+        
+        NSNumber *vtcBtcValue = json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"];
+        
+        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:TICKER_URL]
+                                             cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+        
+        [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
+                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                                   if (connectionError) {
+                                       NSLog(@"%@", connectionError);
+                                       return;
+                                   }
+                                   
+                                   NSError *error = nil;
+                                   NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+                                   NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                                   NSString *currencyCode = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode];
+                                   NSString *symbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
+                                   
+                                   if (error || ! [json isKindOfClass:[NSDictionary class]] ||
+                                       ! [json[DEFAULT_CURRENCY_CODE] isKindOfClass:[NSDictionary class]] ||
+                                       ! [json[DEFAULT_CURRENCY_CODE][@"last"] isKindOfClass:[NSNumber class]] ||
+                                       ([json[currencyCode] isKindOfClass:[NSDictionary class]] &&
+                                        ! [json[currencyCode][@"last"] isKindOfClass:[NSNumber class]])) {
+                                           NSLog(@"unexpected response from blockchain.info:\n%@",
+                                                 [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                                           return;
+                                       }
+                                   
+                                   if (! [json[currencyCode] isKindOfClass:[NSDictionary class]]) { // if local currency is missing, use default
+                                       currencyCode = DEFAULT_CURRENCY_CODE;
+                                       symbol = DEFAULT_CURRENCY_SYMBOL;
+                                   }
+                                   
+                                   [defs setObject:symbol forKey:LOCAL_CURRENCY_SYMBOL_KEY];
+                                   [defs setObject:currencyCode forKey:LOCAL_CURRENCY_CODE_KEY];
+                                   
+                                   NSNumber *lastPrice = json[currencyCode][@"last"];
+                                   
+                                   [defs setObject:[NSNumber numberWithFloat:(lastPrice.floatValue * vtcBtcValue.floatValue)] forKey:LOCAL_CURRENCY_PRICE_KEY];
+                                   [defs synchronize];
+                                   NSLog(@"exchange rate updated to %@/%@", [self localCurrencyStringForAmount:SATOSHIS],
+                                         [self stringForAmount:SATOSHIS]);
+                                   
+                                   if (! self.wallet) return;
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       [[NSNotificationCenter defaultCenter] postNotificationName:BRWalletBalanceChangedNotification object:nil];
+                                   });
+                               }];
     }];
 }
 
