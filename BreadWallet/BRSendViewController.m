@@ -23,7 +23,6 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-nonsense
 #import "BRSendViewController.h"
 #import "BRRootViewController.h"
 #import "BRAmountViewController.h"
