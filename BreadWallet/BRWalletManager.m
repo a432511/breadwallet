@@ -39,9 +39,9 @@
 #import <netdb.h>
 #import "Reachability.h"
 
-#define BTC         @"\xC9\x83"     // capital B with stroke (utf-8)
-#define BITS        @"\xC6\x80"     // lowercase b with stroke (utf-8)
-#define NARROW_NBSP @"\xE2\x80\xAF" // narrow no-break space (utf-8)
+#define BTC         @"\xE1\x97\x90" 			// capital V with a stroke through middle (utf-8)
+#define BITS        @"\x6D" + @"\xE1\x97\x90"   // mV (utf-8)
+#define NARROW_NBSP @"\xE2\x80\xAF" 			// narrow no-break space (utf-8)
 
 #define LOCAL_CURRENCY_SYMBOL_KEY @"LOCAL_CURRENCY_SYMBOL"
 #define LOCAL_CURRENCY_CODE_KEY   @"LOCAL_CURRENCY_CODE"
@@ -51,7 +51,7 @@
 #define CREATION_TIME_KEY         @"creationtime"
 
 #define SEED_ENTROPY_LENGTH     (128/8)
-#define SEC_ATTR_SERVICE        @"org.voisine.breadwallet"
+#define SEC_ATTR_SERVICE        @"org.a432511.breadwallet"
 #define DEFAULT_CURRENCY_PRICE  500.0
 #define DEFAULT_CURRENCY_CODE   @"USD"
 #define DEFAULT_CURRENCY_SYMBOL @"$"
