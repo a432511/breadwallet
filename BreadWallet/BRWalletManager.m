@@ -52,7 +52,7 @@
 
 #define SEED_ENTROPY_LENGTH     (128/8)
 #define SEC_ATTR_SERVICE        @"org.a432511.breadwallet"
-#define DEFAULT_CURRENCY_PRICE  500.0
+#define DEFAULT_CURRENCY_PRICE  1.0
 #define DEFAULT_CURRENCY_CODE   @"USD"
 #define DEFAULT_CURRENCY_SYMBOL @"$"
 
