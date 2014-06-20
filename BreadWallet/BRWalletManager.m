@@ -271,6 +271,7 @@ static NSData *getKeychainData(NSString *key)
             NSLog(@"%@", connectionError);
             return;
         }
+        /*
         NSError *error = nil;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         
@@ -285,6 +286,9 @@ static NSData *getKeychainData(NSString *key)
             }
         
         NSNumber *vtcBtcValue = json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"];
+         */
+        
+        NSNumber *vtcBtcValue = [NSNumber numberWithFloat:.0012];
         
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:TICKER_URL]
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];

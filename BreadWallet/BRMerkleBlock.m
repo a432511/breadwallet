@@ -132,7 +132,7 @@ static uint32_t getCompact(const BIGNUM *bn)
     _flags = [message dataAtOffset:off length:&l];
     _height = BLOCK_UNKOWN_HEIGHT;
 	
-    _blockHash = [[message subdataWithRange:NSMakeRange(0, 80)] SCRYPT_N:_timestamp];
+    _blockHash = [[message subdataWithRange:NSMakeRange(0, 80)] SCRYPT_N:(_timestamp + NSTimeIntervalSince1970)];
 
     return self;
 }
@@ -339,7 +339,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
     BN_init(&tmp3);
     BN_init(&tmp4);
 	
-	for (uint32_t i = 1; current.height > 0; i++) {
+	for (uint32_t i = 1; (current ? current.height : _height) > 0; i++) {
 	
 		if (pastBlocksMax > 0 && i > pastBlocksMax) 
 		{ 
@@ -348,7 +348,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 		
 		pastBlocksMass++;
 		
-		setCompact(&pastDifficultyAverage, current.target);
+		setCompact(&pastDifficultyAverage, (current ? current.target : _target));
 		if (i != 1)
 		{ 
 			// The BigNumber arithmetic requires OpenSSL helper methods (BN_copy, BN_mul, BN_somefunction)
@@ -376,7 +376,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 		
 		BN_copy(&pastDifficultyAveragePrev, &pastDifficultyAverage);
 		
-		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)current.timestamp);
+		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)(current ? current.timestamp : _timestamp));
 		targetSeconds = TARGET_TIMESPAN * pastBlocksMass;
 		pastRateAdjustmentRatio = (double)1;
 		
@@ -410,20 +410,22 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 			break;
 		}
 		
-		// I suck with pointers... this might be totally wrong
 		// The point is to set the current block to the previous block
-		current = blocks[current.prevBlock];
+		current = blocks[(current ? current.prevBlock : _prevBlock)];
 		// and set the previous block to the one before that
 		previous = blocks[current.prevBlock];
 	}
 	
 	BN_copy(&newDiff, &pastDifficultyAverage);
 	if (timespan != 0 && targetSeconds != 0) {
+            BN_set_word(&tmp2, timespan);
+            BN_set_word(&tmp3, targetSeconds);
+        
 			// tmp1 = newDiff * pastRateActualSeconds in the context of the transaction
-			BN_mul(&tmp1, &newDiff, &timespan, ctx);
+			BN_mul(&tmp1, &newDiff, &tmp2, ctx);
 			
 			// newDiff = tmp1 / pastRateTargetSeconds in the context of the transaction
-			BN_div(&newDiff, NULL, &tmp1, &targetSeconds, ctx);
+			BN_div(&newDiff, NULL, &tmp1, &tmp3, ctx);
 	}
 	// Convert MAX_PROOF_OF_WORK to BigNumber stored in maxTarget
     setCompact(&maxTarget, MAX_PROOF_OF_WORK);
