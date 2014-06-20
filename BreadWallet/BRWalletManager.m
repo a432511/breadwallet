@@ -145,12 +145,12 @@ static NSData *getKeychainData(NSString *key)
     self.format.negativeFormat = [self.format.positiveFormat
                                   stringByReplacingCharactersInRange:[self.format.positiveFormat rangeOfString:@"#"]
                                   withString:@"-#"];
-    self.format.currencySymbol = BITS NARROW_NBSP;
-    self.format.maximumFractionDigits = 2;
-    self.format.maximum = @21000000000000.0;
-//    self.format.currencySymbol = BTC NARROW_NBSP;
-//    self.format.maximumFractionDigits = 8;
-//    self.format.maximum = @21000000.0;
+    //self.format.currencySymbol = BITS NARROW_NBSP;
+    //self.format.maximumFractionDigits = 2;
+    //self.format.maximum = @21000000000000.0;
+    self.format.currencySymbol = BTC NARROW_NBSP;
+    self.format.maximumFractionDigits = 8;
+    self.format.maximum = @21000000.0;
 
     [self updateExchangeRate];
 
