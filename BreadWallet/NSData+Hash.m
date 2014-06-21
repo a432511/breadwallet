@@ -23,10 +23,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import "BRKey+BIP38.h"
 #import "NSData+Hash.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <openssl/ripemd.h>
-#import "scrypt.hpp"
 
 #define SCRYPT_DIGEST_LENGTH 32
 
@@ -52,19 +52,9 @@
 
 // TODO: test if SCRYPT_N implementation is correct
 
-#define BEGIN(a) ((char*)&(a))
-
 - (NSData *)SCRYPT_N:(int64_t) timestamp
 {
-    // uint32_t to bytes
-    uint32_t hash;
-    
-    scrypt_N_1_1_256(self.bytes, BEGIN(hash), timestamp);
-    
-    //hash = CFSwapInt32HostToBig(hash); ///< If we want to store in big endian
-    
-    NSData *d = [NSData dataWithBytes:&hash length:sizeof(hash)];
-    
+    NSData *d = [BRKey scryptBlock:self];
     return d;
 }
 

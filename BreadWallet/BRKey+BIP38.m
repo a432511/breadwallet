@@ -34,12 +34,16 @@
 // BIP38 is a method for encrypting private keys with a passphrase
 // https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki
 
-#define BIP38_SCRYPT_N    16384
-#define BIP38_SCRYPT_R    8
-#define BIP38_SCRYPT_P    8
-#define BIP38_SCRYPT_EC_N 1024
-#define BIP38_SCRYPT_EC_R 1
-#define BIP38_SCRYPT_EC_P 1
+#define BIP38_SCRYPT_N         16384
+#define BIP38_SCRYPT_R         8
+#define BIP38_SCRYPT_P         8
+#define BIP38_SCRYPT_EC_N      1024
+#define BIP38_SCRYPT_EC_R      1
+#define BIP38_SCRYPT_EC_P      1
+#define VERTCOIN_SCRYPT_N      2048
+#define VERTCOIN_SCRYPT_R      1
+#define VERTCOIN_SCRYPT_P      1
+#define VERTCOIN_DIGEST_LENGTH 32
 
 // bitwise left rotation, this will typically be compiled into a single instruction
 #define rotl(a, b) (((a) << (b)) | ((a) >> (32 - (b))))
@@ -388,6 +392,12 @@ confirmationCode:(NSString **)confcode;
     BN_CTX_free(ctx);
 
     return ([[[BRKey keyWithPublicKey:pubKey] address] isEqual:address]) ? YES : NO;
+}
+
++ (NSData *)scryptBlock:(NSData *)block
+{
+    // TODO: Lookup N Factor via timestamp dictionary
+    return scrypt(block, block, VERTCOIN_SCRYPT_N, VERTCOIN_SCRYPT_R, VERTCOIN_SCRYPT_P, VERTCOIN_DIGEST_LENGTH);
 }
 
 - (instancetype)initWithBIP38Key:(NSString *)key andPassphrase:(NSString *)passphrase

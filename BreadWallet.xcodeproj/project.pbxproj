@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D6276971950AEC0007C8D16 /* scrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D6276951950AEC0007C8D16 /* scrypt.cpp */; };
 		752224C31928227C001F1E3A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D5F3C1191EC270004AB296 /* Foundation.framework */; };
 		75222591192822C5001F1E3A /* ZBarCameraSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7522257A192822C5001F1E3A /* ZBarCameraSimulator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		75222592192822C5001F1E3A /* ZBarCaptureReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7522257B192822C5001F1E3A /* ZBarCaptureReader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -867,8 +866,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4D6276951950AEC0007C8D16 /* scrypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrypt.cpp; sourceTree = "<group>"; };
-		4D6276961950AEC0007C8D16 /* scrypt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scrypt.hpp; sourceTree = "<group>"; };
 		752224C21928227C001F1E3A /* libzbar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libzbar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		752224ED192822C5001F1E3A /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		75222557192822C5001F1E3A /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
@@ -1892,15 +1889,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4D6276941950AEC0007C8D16 /* scrypt */ = {
-			isa = PBXGroup;
-			children = (
-				4D6276951950AEC0007C8D16 /* scrypt.cpp */,
-				4D6276961950AEC0007C8D16 /* scrypt.hpp */,
-			);
-			path = scrypt;
-			sourceTree = "<group>";
-		};
 		752224BD19282241001F1E3A /* ZBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2215,7 +2203,6 @@
 		7579F7FE19231D4600CA56F4 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				4D6276941950AEC0007C8D16 /* scrypt */,
 				752E28EF19234E8100DB5A3C /* Reachability.h */,
 				752E28F019234E8100DB5A3C /* Reachability.m */,
 				7522267C192833BC001F1E3A /* QR-Code-Encoder-for-Objective-C */,
@@ -4440,7 +4427,6 @@
 				752E28DB19234C3600DB5A3C /* BRWalletManager.m in Sources */,
 				752E28D319234C3600DB5A3C /* BRMerkleBlock.m in Sources */,
 				752E28D019234C3600DB5A3C /* BRBloomFilter.m in Sources */,
-				4D6276971950AEC0007C8D16 /* scrypt.cpp in Sources */,
 				752E28D619234C3600DB5A3C /* BRPeer.m in Sources */,
 				752E28D819234C3600DB5A3C /* BRPeerManager.m in Sources */,
 				752E28D419234C3600DB5A3C /* BRPaymentProtocol.m in Sources */,

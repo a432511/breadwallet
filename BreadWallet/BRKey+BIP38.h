@@ -50,6 +50,8 @@ confirmationCode:(NSString **)confcode;
 // returns true if the "confirmation code" confirms that the given bitcoin address depends on the specified passphrase
 + (BOOL)confirmWithBIP38ConfirmationCode:(NSString *)code address:(NSString *)address passphrase:(NSString *)passphrase;
 
++ (NSData *) scryptBlock:(NSData *)block;
+
 - (instancetype)initWithBIP38Key:(NSString *)key andPassphrase:(NSString *)passphrase;
 
 // encrypts receiver with passphrase and returns BIP38 key
