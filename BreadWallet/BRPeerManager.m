@@ -23777,7 +23777,7 @@ static const char *dns_seeds[] = {
     }
 
     if (_blocks.count > 0) {
-        if (blockHeight >= self.lastBlockHeight - BLOCK_DIFFICULTY_INTERVAL*2) { // recent block we have the header for
+        if (blockHeight >= self.lastBlockHeight - blockDifficultyInterval*2) { // recent block we have the header for
             BRMerkleBlock *block = self.lastBlock;
 
             while (block && block.height > blockHeight) {
