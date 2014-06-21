@@ -8,7 +8,7 @@ An [SPV](https://en.vertcoin.it/wiki/Thin_Client_Security#Header-Only_Clients),
 deterministic vertcoin wallet for iOS
 
 breadwallet is designed to be the simplest, easiest and most secure vertcoin
-wallet for iOS 
+wallet on any platform
 
 breadwallet is the first true vertcoin wallet for iOS, where you hold your
 money right on your own device without relying on any third party service 
