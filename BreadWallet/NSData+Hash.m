@@ -26,7 +26,9 @@
 #import "NSData+Hash.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <openssl/ripemd.h>
-#import "scrypt.h"
+#import "scrypt.hpp"
+
+#define SCRYPT_DIGEST_LENGTH 32
 
 @implementation NSData (Hash)
 
@@ -52,7 +54,6 @@
 
 - (NSData *)SCRYPT_N:(int64_t) timestamp
 {
-    #define SCRYPT_DIGEST_LENGTH 32
     NSMutableData *d = [NSMutableData dataWithLength:SCRYPT_DIGEST_LENGTH];
     scrypt_N_1_1_256(self.bytes, d.mutableBytes, timestamp);
     return d;

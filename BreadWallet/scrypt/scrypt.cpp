@@ -31,7 +31,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 
-#include "scrypt.h"
+#include "scrypt.hpp"
 #include "util.h"
 #include <stdlib.h>
 #include <stdint.h>
@@ -63,20 +63,11 @@ static inline unsigned char GetNfactor(int64_t nTimestamp) {
 
     if (n > 255)
     {
-//        printf( "GetNfactor(%lld) - something wrong(n == %d)\n", nTimestamp, n );
-        //compiler doesn't recognize printf, putting a breakpoint here instead
-
+        // This shouldn't happen
     }
     unsigned char N = (unsigned char) n;
 
     return MIN(MAX(N, minNfactor), maxNfactor);
-}
-
-static inline uint32_t scrypt_be32dec(const void *pp)
-{
-	const uint8_t *p = (uint8_t const *)pp;
-	return ((uint32_t)(p[3]) + ((uint32_t)(p[2]) << 8) +
-	    ((uint32_t)(p[1]) << 16) + ((uint32_t)(p[0]) << 24));
 }
 
 static inline void scrypt_be32enc(void *pp, uint32_t x)
@@ -321,8 +312,12 @@ void scrypt_N_1_1_256(const char *input, char *output, int64_t nTimestamp)
 {
 	unsigned char Nfactor = GetNfactor(nTimestamp);
 	
-	char scratchpad[((1 << (Nfactor + 1)) * 128 ) + 63];
+    unsigned long int scrypt_scratpad_size_current_block = ((1 << (Nfactor + 1)) * 128 ) + 63;
+    
+    char * scratchpad = new char[scrypt_scratpad_size_current_block];
     
     // Generic scrypt
     scrypt_N_1_1_256_sp_generic(input, output, scratchpad, Nfactor);
+    
+    delete[] scratchpad;
 }

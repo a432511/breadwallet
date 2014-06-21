@@ -868,7 +868,7 @@
 
 /* Begin PBXFileReference section */
 		4D6276951950AEC0007C8D16 /* scrypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrypt.cpp; sourceTree = "<group>"; };
-		4D6276961950AEC0007C8D16 /* scrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scrypt.h; sourceTree = "<group>"; };
+		4D6276961950AEC0007C8D16 /* scrypt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scrypt.hpp; sourceTree = "<group>"; };
 		752224C21928227C001F1E3A /* libzbar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libzbar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		752224ED192822C5001F1E3A /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		75222557192822C5001F1E3A /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
@@ -1896,7 +1896,7 @@
 			isa = PBXGroup;
 			children = (
 				4D6276951950AEC0007C8D16 /* scrypt.cpp */,
-				4D6276961950AEC0007C8D16 /* scrypt.h */,
+				4D6276961950AEC0007C8D16 /* scrypt.hpp */,
 			);
 			path = scrypt;
 			sourceTree = "<group>";
@@ -2215,6 +2215,7 @@
 		7579F7FE19231D4600CA56F4 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				4D6276941950AEC0007C8D16 /* scrypt */,
 				752E28EF19234E8100DB5A3C /* Reachability.h */,
 				752E28F019234E8100DB5A3C /* Reachability.m */,
 				7522267C192833BC001F1E3A /* QR-Code-Encoder-for-Objective-C */,
@@ -3432,7 +3433,6 @@
 		75D5F3C7191EC270004AB296 /* BreadWallet */ = {
 			isa = PBXGroup;
 			children = (
-				4D6276941950AEC0007C8D16 /* scrypt */,
 				752E289C19234A4700DB5A3C /* Models */,
 				752E289B19234A3F00DB5A3C /* Views */,
 				75BA5D02192296010040304C /* Controllers */,
@@ -4742,6 +4742,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5055,6 +5057,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -5078,6 +5082,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
