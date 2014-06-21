@@ -52,10 +52,19 @@
 
 // TODO: test if SCRYPT_N implementation is correct
 
+#define BEGIN(a) ((char*)&(a))
+
 - (NSData *)SCRYPT_N:(int64_t) timestamp
 {
-    NSMutableData *d = [NSMutableData dataWithLength:SCRYPT_DIGEST_LENGTH];
-    scrypt_N_1_1_256(self.bytes, d.mutableBytes, timestamp);
+    // uint32_t to bytes
+    uint32_t hash;
+    
+    scrypt_N_1_1_256(self.bytes, BEGIN(hash), timestamp);
+    
+    //hash = CFSwapInt32HostToBig(hash); ///< If we want to store in big endian
+    
+    NSData *d = [NSData dataWithBytes:&hash length:sizeof(hash)];
+    
     return d;
 }
 
