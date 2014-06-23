@@ -152,7 +152,7 @@
 
     UIActionSheet *a = [UIActionSheet new];
 
-    a.title = [NSString stringWithFormat:NSLocalizedString(@"Receive bitcoins at this address: %@", nil),
+    a.title = [NSString stringWithFormat:NSLocalizedString(@"Receive vertcoins at this address: %@", nil),
                self.paymentAddress];
     a.delegate = self;
     [a addButtonWithTitle:NSLocalizedString(@"copy", nil)];

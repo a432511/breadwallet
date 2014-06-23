@@ -424,7 +424,7 @@
     UILabel *l = nil;
 
     if (! warning) {
-        warning = NSLocalizedString(@"DO NOT let anyone see your backup phrase or they can spend your bitcoins.", nil);
+        warning = NSLocalizedString(@"DO NOT let anyone see your backup phrase or they can spend your vertcoins.", nil);
     }
 
     switch (indexPath.section) {

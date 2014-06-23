@@ -647,7 +647,7 @@
         //}
 
         [[[UIAlertView alloc] initWithTitle:nil message:[NSString
-          stringWithFormat:NSLocalizedString(@"the bitcoin network will receive a fee of %@ (%@)", nil), fee,
+          stringWithFormat:NSLocalizedString(@"the vertcoin network will receive a fee of %@ (%@)", nil), fee,
           localCurrencyFee] delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil)
           otherButtonTitles:[NSString stringWithFormat:@"+ %@ (%@)", fee, localCurrencyFee], nil] show];
         return;
