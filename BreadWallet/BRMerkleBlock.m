@@ -110,7 +110,8 @@ static uint32_t getCompact(const BIGNUM *bn)
     if (message.length < 80) return nil;
 
     NSUInteger off = 0, l = 0, len = 0;
-
+    
+    _blockHash = [message subdataWithRange:NSMakeRange(0, 80)].SHA256_2;
     _version = [message UInt32AtOffset:off];
     off += sizeof(uint32_t);
     _prevBlock = [message hashAtOffset:off];
@@ -131,8 +132,8 @@ static uint32_t getCompact(const BIGNUM *bn)
     off += len;
     _flags = [message dataAtOffset:off length:&l];
     _height = BLOCK_UNKOWN_HEIGHT;
-	
-    _blockHash = [[message subdataWithRange:NSMakeRange(0, 80)] SCRYPT_N:(_timestamp + NSTimeIntervalSince1970)];
+    
+    _scryptBlockHash = [[message subdataWithRange:NSMakeRange(0, 80)] SCRYPT_N:(_timestamp + NSTimeIntervalSince1970)];
 
     return self;
 }
@@ -189,7 +190,8 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
     if (BN_cmp(&target, BN_value_one()) < 0 || BN_cmp(&target, &maxTarget) > 0) return NO; // target out of range
 
     BN_init(&hash);
-    BN_bin2bn(_blockHash.reverse.bytes, (int)_blockHash.length, &hash);
+	
+    BN_bin2bn(_scryptBlockHash.reverse.bytes, (int)_scryptBlockHash.length, &hash);
     if (BN_cmp(&hash, &target) > 0) return NO; // block not as difficult as target (smaller values are more difficult)
 
     return YES;
@@ -289,22 +291,8 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 	uint64_t pastBlocksMax = pastSecondsMax / TARGET_TIMESPAN;
 	
 	BRMerkleBlock *current = blocks[_blockHash];
-	BRMerkleBlock *previous = blocks[_prevBlock];
-	
-	// If _prevBlock is not equal to the supplied previous block OR 
-	// the _height is not equal to the supplied previous height + 1
-    if (! [_prevBlock isEqual:previous.blockHash] || _height != previous.height + 1) 
-	{
-		return NO;
-	}
-	
-	// If the current _height is not a multiple of the HARD_FORK_BLOCK_DIFFICULTY_INTERVAL AND
-	// the time is equal to zero
-    if ((_height % HARD_FORK_BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) 
-	{
-		return NO;
-	}
-
+    BRMerkleBlock *lastSolve = blocks[_blockHash];
+    
 	#if BITCOIN_TESTNET
 	
 		//TODO: implement testnet difficulty rule check
@@ -376,7 +364,9 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 		
 		BN_copy(&pastDifficultyAveragePrev, &pastDifficultyAverage);
 		
-		timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)(current ? current.timestamp : _timestamp));
+		timespan =
+            (int32_t)(((int64_t)((lastSolve ? lastSolve.timestamp : _timestamp) + NSTimeIntervalSince1970) -
+                      (int64_t)((current ? current.timestamp : _timestamp) + NSTimeIntervalSince1970)) * 100);
 		targetSeconds = TARGET_TIMESPAN * pastBlocksMass;
 		pastRateAdjustmentRatio = (double)1;
 		
@@ -402,7 +392,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 		}
 		
 		// We are at the beginning of the block chain?
-		if (!previous.prevBlock)
+		if (!current.prevBlock)
 		{ 
 			// TODO: What does "assert" do?   -> assert "throws an exception" if the condition is false.
             
@@ -413,7 +403,7 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 		// The point is to set the current block to the previous block
 		current = blocks[(current ? current.prevBlock : _prevBlock)];
 		// and set the previous block to the one before that
-		previous = blocks[current.prevBlock];
+		//previous = blocks[current.prevBlock];
 	}
 	
 	BN_copy(&newDiff, &pastDifficultyAverage);
@@ -432,15 +422,26 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
 	
 	// If newDiff > maxTarget, set newDiff = maxTarget (boundary)
     if (BN_cmp(&newDiff, &maxTarget) > 0) {
+        NSLog(@"difficulty exceeds max. used %x at height %d, blockHash: %@",
+              MAX_PROOF_OF_WORK, _height, _blockHash);
 		BN_copy(&newDiff, &maxTarget);
 	}
 	
 	// End transaction and free memory
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
-	
-	// Is the transaction difficulty = to our calculated difficulty?
-    return (_target == getCompact(&newDiff)) ? YES : NO;
+    
+    uint32_t compatNewDiff = getCompact(&newDiff);
+    
+    if(_target != compatNewDiff){
+        //NSLog(@"invalid difficulty target. provided %x, calculated %x at height %d, blockHash: %@",
+        //    _target, compatNewDiff, _height, _blockHash);
+        return NO;
+    } else {
+        //NSLog(@"correct difficulty target! provided %x, calculated %x at height %d, blockHash: %@",
+        //     _target, compatNewDiff, _height, _blockHash);
+        return YES;
+    }
 }
 
 // recursively walks the merkle tree in depth first order, calling leaf(hash, flag) for each stored hash, and
