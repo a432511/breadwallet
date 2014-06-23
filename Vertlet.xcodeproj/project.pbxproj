@@ -1810,21 +1810,21 @@
 		75AA5F54194143D5003F23BD /* BRBouncyBurgerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRBouncyBurgerButton.m; sourceTree = "<group>"; };
 		75B8346619233B550010931E /* dsa_gen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dsa_gen.c; sourceTree = "<group>"; };
 		75BCC59A1946520700EC1A64 /* BreadWalletTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BreadWalletTests.h; sourceTree = "<group>"; };
-		75D5F3BE191EC270004AB296 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75D5F3BE191EC270004AB296 /* vertlet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vertlet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D5F3C1191EC270004AB296 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		75D5F3C3191EC270004AB296 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		75D5F3C5191EC270004AB296 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		75D5F3C9191EC270004AB296 /* BreadWallet-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BreadWallet-Info.plist"; sourceTree = "<group>"; };
+		75D5F3C9191EC270004AB296 /* Vertlet-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Vertlet-Info.plist"; sourceTree = "<group>"; };
 		75D5F3CB191EC270004AB296 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		75D5F3CD191EC270004AB296 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		75D5F3CF191EC270004AB296 /* BreadWallet-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BreadWallet-Prefix.pch"; sourceTree = "<group>"; };
+		75D5F3CF191EC270004AB296 /* Vertlet-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Vertlet-Prefix.pch"; sourceTree = "<group>"; };
 		75D5F3D0191EC270004AB296 /* BRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRAppDelegate.h; sourceTree = "<group>"; };
 		75D5F3D1191EC270004AB296 /* BRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BRAppDelegate.m; sourceTree = "<group>"; };
 		75D5F3DD191EC270004AB296 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75D5F3DF191EC270004AB296 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		75D5F3E5191EC270004AB296 /* BreadWalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreadWalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75D5F3E5191EC270004AB296 /* VertletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VertletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D5F3E6191EC270004AB296 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		75D5F3EE191EC270004AB296 /* BreadWalletTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BreadWalletTests-Info.plist"; sourceTree = "<group>"; };
+		75D5F3EE191EC270004AB296 /* VertletTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VertletTests-Info.plist"; sourceTree = "<group>"; };
 		75D5F3F0191EC270004AB296 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		75D5F3F2191EC270004AB296 /* BreadWalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BreadWalletTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -3394,8 +3394,8 @@
 		75D5F3BF191EC270004AB296 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				75D5F3BE191EC270004AB296 /* breadwallet.app */,
-				75D5F3E5191EC270004AB296 /* BreadWalletTests.xctest */,
+				75D5F3BE191EC270004AB296 /* vertlet.app */,
+				75D5F3E5191EC270004AB296 /* VertletTests.xctest */,
 				7579F7D919231A5D00CA56F4 /* libcrypto.a */,
 				752E27FA1923434B00DB5A3C /* libssl.a */,
 				752224C21928227C001F1E3A /* libzbar.a */,
@@ -3440,11 +3440,11 @@
 		75D5F3C8191EC270004AB296 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				75D5F3C9191EC270004AB296 /* BreadWallet-Info.plist */,
+				75D5F3C9191EC270004AB296 /* Vertlet-Info.plist */,
 				75D5F3CA191EC270004AB296 /* InfoPlist.strings */,
 				75A1E4D6193869C500D85BEE /* Localizable.strings */,
 				75D5F3CD191EC270004AB296 /* main.m */,
-				75D5F3CF191EC270004AB296 /* BreadWallet-Prefix.pch */,
+				75D5F3CF191EC270004AB296 /* Vertlet-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3462,7 +3462,7 @@
 		75D5F3ED191EC270004AB296 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				75D5F3EE191EC270004AB296 /* BreadWalletTests-Info.plist */,
+				75D5F3EE191EC270004AB296 /* VertletTests-Info.plist */,
 				75D5F3EF191EC270004AB296 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -3579,12 +3579,12 @@
 			);
 			name = breadwallet;
 			productName = BreadWallet;
-			productReference = 75D5F3BE191EC270004AB296 /* breadwallet.app */;
+			productReference = 75D5F3BE191EC270004AB296 /* vertlet.app */;
 			productType = "com.apple.product-type.application";
 		};
-		75D5F3E4191EC270004AB296 /* BreadWalletTests */ = {
+		75D5F3E4191EC270004AB296 /* VertletTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 75D5F3F9191EC270004AB296 /* Build configuration list for PBXNativeTarget "BreadWalletTests" */;
+			buildConfigurationList = 75D5F3F9191EC270004AB296 /* Build configuration list for PBXNativeTarget "VertletTests" */;
 			buildPhases = (
 				75D5F3E1191EC270004AB296 /* Sources */,
 				75D5F3E2191EC270004AB296 /* Frameworks */,
@@ -3595,9 +3595,9 @@
 			dependencies = (
 				75D5F3EB191EC270004AB296 /* PBXTargetDependency */,
 			);
-			name = BreadWalletTests;
+			name = VertletTests;
 			productName = BreadWalletTests;
-			productReference = 75D5F3E5191EC270004AB296 /* BreadWalletTests.xctest */;
+			productReference = 75D5F3E5191EC270004AB296 /* VertletTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -3623,7 +3623,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 75D5F3B9191EC270004AB296 /* Build configuration list for PBXProject "BreadWallet" */;
+			buildConfigurationList = 75D5F3B9191EC270004AB296 /* Build configuration list for PBXProject "Vertlet" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -3642,7 +3642,7 @@
 				752224C11928227C001F1E3A /* zbar */,
 				7522265919283338001F1E3A /* qrencoder */,
 				7579F7CF1923175300CA56F4 /* submodules */,
-				75D5F3E4191EC270004AB296 /* BreadWalletTests */,
+				75D5F3E4191EC270004AB296 /* VertletTests */,
 			);
 		};
 /* End PBXProject section */
@@ -4640,7 +4640,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/ssl.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4666,7 +4666,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/ssl.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4733,15 +4733,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/openssl/include",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/BreadWallet/BreadWallet-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				PRODUCT_NAME = vertlet;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4753,7 +4753,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/ssl.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4779,7 +4779,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/crypto.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4874,13 +4874,13 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "BreadWalletTests/BreadWalletTests-Info.plist";
-				PRODUCT_NAME = BreadWalletTests;
+				INFOPLIST_FILE = "BreadWalletTests/VertletTests-Info.plist";
+				PRODUCT_NAME = VertletTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -4922,7 +4922,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/crypto.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4948,7 +4948,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				DSTROOT = /tmp/crypto.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5049,15 +5049,15 @@
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/openssl/include",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/BreadWallet/BreadWallet-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				PRODUCT_NAME = vertlet;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5073,15 +5073,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/openssl/include",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/BreadWallet/BreadWallet-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				PRODUCT_NAME = vertlet;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5097,13 +5097,13 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
+				GCC_PREFIX_HEADER = "BreadWallet/Verlet-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "BreadWalletTests/BreadWalletTests-Info.plist";
-				PRODUCT_NAME = BreadWalletTests;
+				INFOPLIST_FILE = "BreadWalletTests/VertletTests-Info.plist";
+				PRODUCT_NAME = VertletTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -5119,9 +5119,9 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
-				INFOPLIST_FILE = "BreadWalletTests/BreadWalletTests-Info.plist";
-				PRODUCT_NAME = BreadWalletTests;
+				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
+				INFOPLIST_FILE = "BreadWalletTests/VertletTests-Info.plist";
+				PRODUCT_NAME = VertletTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -5180,7 +5180,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		75D5F3B9191EC270004AB296 /* Build configuration list for PBXProject "BreadWallet" */ = {
+		75D5F3B9191EC270004AB296 /* Build configuration list for PBXProject "Vertlet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75D5F3F4191EC270004AB296 /* Debug */,
@@ -5200,7 +5200,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		75D5F3F9191EC270004AB296 /* Build configuration list for PBXNativeTarget "BreadWalletTests" */ = {
+		75D5F3F9191EC270004AB296 /* Build configuration list for PBXNativeTarget "VertletTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75D5F3FA191EC270004AB296 /* Debug */,
