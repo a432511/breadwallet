@@ -4730,8 +4730,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
@@ -4741,8 +4741,9 @@
 					"$(SRCROOT)/openssl/include",
 				);
 				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = vertlet;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BF078C26-5F83-4A3B-97BC-F03AD4D2AFB0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = GCov_Build;
@@ -5045,9 +5046,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
@@ -5057,8 +5058,9 @@
 					"$(SRCROOT)/openssl/include",
 				);
 				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = vertlet;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BF078C26-5F83-4A3B-97BC-F03AD4D2AFB0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -5070,8 +5072,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Adam Rivera (7XUR4E25NP)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BreadWallet/Vertlet-Prefix.pch";
 				GCC_WARN_PEDANTIC = YES;
@@ -5081,8 +5083,9 @@
 					"$(SRCROOT)/openssl/include",
 				);
 				INFOPLIST_FILE = "BreadWallet/Vertlet-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = vertlet;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BF078C26-5F83-4A3B-97BC-F03AD4D2AFB0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

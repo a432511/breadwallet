@@ -42,7 +42,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.sovereignshare.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>com.sovereignshare.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -69,7 +69,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>org.sovereignshare.vertlet</string>
+			<string>com.sovereignshare.vertlet</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>vertlet</string>

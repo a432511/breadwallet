@@ -51,7 +51,7 @@
 #define CREATION_TIME_KEY         @"creationtime"
 
 #define SEED_ENTROPY_LENGTH     (128/8)
-#define SEC_ATTR_SERVICE        @"org.sovereignshare.vertlet"
+#define SEC_ATTR_SERVICE        @"com.sovereignshare.vertlet"
 #define DEFAULT_CURRENCY_PRICE  1.0
 #define DEFAULT_CURRENCY_CODE   @"USD"
 #define DEFAULT_CURRENCY_SYMBOL @"$"

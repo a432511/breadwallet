@@ -1,4 +1,4 @@
-![ƀ](/images/icon.png) breadwallet vertcoin port
+![ƀ](/images/icon.png) vertlet - breadwallet vertcoin port
 ----------------------------------
 
 This is a port of https://github.com/voisine/breadwallet for vertcoin.
@@ -7,10 +7,10 @@ An [SPV](https://en.vertcoin.it/wiki/Thin_Client_Security#Header-Only_Clients),
 [BIP32](https://github.com/vertcoin/bips/blob/master/bip-0032.mediawiki)
 deterministic vertcoin wallet for iOS
 
-breadwallet is designed to be the simplest, easiest and most secure vertcoin
+vertlet is designed to be the simplest, easiest and most secure vertcoin
 wallet on any platform
 
-breadwallet is the first true vertcoin wallet for iOS, where you hold your
+vertlet is the first true vertcoin wallet for iOS, where you hold your
 money right on your own device without relying on any third party service 
 
 ![screenshot1](/images/screenshot1.jpg)
@@ -26,11 +26,11 @@ features:
 
 ![screenshot3](/images/screenshot3.jpg)
 
-breadwallet uses "simplified payment verification" or
+vertlet uses "simplified payment verification" or
 [SPV](https://en.bitcoin.it/wiki/Thin_Client_Security#Header-Only_Clients) mode
 for fast performance in a mobile environment.
 
-breadwallet is a 
+vertlet is a 
 [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 "deterministic" wallet, meaning that all the vertcoin addresses
 and private keys are generated from a single "seed". If you know the seed, you
@@ -41,7 +41,7 @@ The wallet seed is securely stored on the iOS keychain and never leaves your
 device. It is never stored on any server. Your private keys are generated from
 your seed as needed and then immediately wiped from memory. Additionally, iOS
 keychain data persists even if the app is deleted. If you accidentally delete
-breadwallet and reinstall it, your wallet will be automatically recreated from
+vertlet and reinstall it, your wallet will be automatically recreated from
 the seed stored on the keychain. (Be sure to do a factory reset if you sell or
 give away your device!)
 
@@ -51,13 +51,13 @@ have access to your wallet. Write it down and store it in a safe place. In the
 event your device is damaged or lost you can restore your wallet on a new device
 using your backup phrase. Be sure to enable a passcode on your device and use
 [remote erase](http://www.apple.com/icloud/find-my-iphone.html#activation-lock)
-if it is lost or stolen. Future versions of breadwallet will also include a
+if it is lost or stolen. Future versions of vertlet will also include a
 secondary passcode on the app itself.
 
 ![screenshot2](/images/screenshot2.jpg)
 
-breadwallet is open source and available under the terms of the MIT license.
-Source code is available at https://github.com/a432511/breadwallet
+vertlet is open source and available under the terms of the MIT license.
+Source code is available at https://github.com/a432511/vertlet
 
 **WARNING:** installation on jailbroken devices is strongly discouraged
 
