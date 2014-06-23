@@ -23680,7 +23680,7 @@ static const char *dns_seeds[] = {
             self.syncStartHeight = 0;
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *error = [NSError errorWithDomain:@"BreadWallet" code:1 userInfo:@{NSLocalizedDescriptionKey:
+                NSError *error = [NSError errorWithDomain:@"Vertlet" code:1 userInfo:@{NSLocalizedDescriptionKey:
                                   NSLocalizedString(@"no peers found", nil)}];
 
                 [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerSyncFailedNotification
@@ -23719,7 +23719,7 @@ static const char *dns_seeds[] = {
 {
     if (! [transaction isSigned]) {
         if (completion) {
-            completion([NSError errorWithDomain:@"BreadWallet" code:401 userInfo:@{NSLocalizedDescriptionKey:
+            completion([NSError errorWithDomain:@"Vertlet" code:401 userInfo:@{NSLocalizedDescriptionKey:
                         NSLocalizedString(@"vertcoin transaction not signed", nil)}]);
         }
         return;
@@ -23727,7 +23727,7 @@ static const char *dns_seeds[] = {
 
     if (! self.connected) {
         if (completion) {
-            completion([NSError errorWithDomain:@"BreadWallet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
+            completion([NSError errorWithDomain:@"Vertlet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
                         NSLocalizedString(@"not connected to the vertcoin network", nil)}]);
         }
         return;
@@ -23826,7 +23826,7 @@ static const char *dns_seeds[] = {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(txTimeout:) object:txHash];
 
     if (callback) {
-        callback([NSError errorWithDomain:@"BreadWallet" code:BITCOIN_TIMEOUT_CODE userInfo:@{NSLocalizedDescriptionKey:
+        callback([NSError errorWithDomain:@"Vertlet" code:BITCOIN_TIMEOUT_CODE userInfo:@{NSLocalizedDescriptionKey:
                   NSLocalizedString(@"transaction canceled, network timeout", nil)}]);
     }
 }
@@ -24032,7 +24032,7 @@ static const char *dns_seeds[] = {
 {
     NSLog(@"%@:%d disconnected%@%@", peer.host, peer.port, error ? @", " : @"", error ? error : @"");
     
-    if ([error.domain isEqual:@"BreadWallet"] && error.code != BITCOIN_TIMEOUT_CODE) {
+    if ([error.domain isEqual:@"Vertlet"] && error.code != BITCOIN_TIMEOUT_CODE) {
         [self peerMisbehavin:peer]; // if it's protocol error other than timeout, the peer isn't following the rules
     }
     else if (error) { // timeout or some non-protocol related network error

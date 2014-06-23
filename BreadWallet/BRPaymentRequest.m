@@ -163,7 +163,7 @@
     NSURL *u = [NSURL URLWithString:url];
 
     if (! u) {
-        completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+        completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                          NSLocalizedString(@"bad payment request URL", nil)}]);
         return;
     }
@@ -176,7 +176,7 @@
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (! [response.MIMEType.lowercaseString isEqual:@"application/vertcoin-paymentrequest"] || data.length > 50000){
-            completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+            completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);
             return;
@@ -190,14 +190,14 @@
 #endif
 
         if (! req) {
-            completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+            completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);
             return;
         }
 
         if (! [req.details.network isEqual:network]) {
-            completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+            completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"requested network \"%@\" instead of \"%@\"",
                                                                           nil), req.details.network, network]}]);
             return;
@@ -213,7 +213,7 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
     NSURL *u = [NSURL URLWithString:paymentURL];
 
     if (! u || [u.scheme isEqual:@"http"]) { // must be https rather than http
-        completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+        completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                          NSLocalizedString(@"bad payment URL", nil)}]);
     }
 
@@ -228,7 +228,7 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if (! [response.MIMEType.lowercaseString isEqual:@"application/vertcoin-paymentack"] || data.length > 50000) {
-            completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+            completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);
             return;
@@ -237,7 +237,7 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
         BRPaymentProtocolACK *ack = [BRPaymentProtocolACK ackWithData:data];
         
         if (! ack) {
-            completion(nil, [NSError errorWithDomain:@"BreadWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+            completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
                             }]);
             return;
