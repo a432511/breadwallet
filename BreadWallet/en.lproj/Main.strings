@@ -137,8 +137,8 @@
 /* Class = "IBUILabel"; text = "receive money:"; ObjectID = "qel-3J-2VC"; */
 "qel-3J-2VC.text" = "receive money:";
 
-/* Class = "IBUILabel"; text = "vertlet v%ver%\nCopyright © 2014 Adam Rivera\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttps://github.com/a432511/vertlet\nhttps://github.com/voisine/breadwallet"; ObjectID = "uvz-hk-Nr4"; */
-"uvz-hk-Nr4.text" = "vertlet (breadwallet port) v%ver%\nCopyright © 2014 Sovereign Share LLC\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttps://github.com/a432511/vertlet\nhttps://github.com/voisine/breadwallet";
+/* Class = "IBUILabel"; text = "vertlet v%ver%\n\nCopyright © 2014 Adam Rivera\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttp://vertlet.com; ObjectID = "uvz-hk-Nr4"; */
+"uvz-hk-Nr4.text" = "vertlet v%ver%\n\nCopyright © 2014 Sovereign Share LLC\n\nCopyright © 2014 Aaron Voisine\n\nThis app is open source:\nhttp://vertlet.com";
 
 /* Class = "IBUILabel"; text = "Start a new wallet by generating a wallet backup phrase."; ObjectID = "wDZ-DN-szv"; */
 "wDZ-DN-szv.text" = "Start a new wallet by generating a wallet backup phrase.";

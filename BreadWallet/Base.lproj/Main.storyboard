@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="14A261i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="BeO-Yt-c4D">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="BeO-Yt-c4D">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -258,14 +258,14 @@
                                 <rect key="frame" x="0.0" y="25" width="320" height="26"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7x-tC-dff">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="0.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="71x-I5-Oh5"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RXe-Yw-Kar">
-                                        <rect key="frame" x="0.0" y="25.5" width="320" height="0.5"/>
+                                        <rect key="frame" x="0.0" y="26" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="t4s-d2-Hm2"/>
@@ -384,7 +384,7 @@
                                 </connections>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pRz-u7-mvg">
-                                <rect key="frame" x="20" y="169" width="280" height="0.5"/>
+                                <rect key="frame" x="20" y="169" width="280" height="1"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.25" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="Gek-ri-xHU"/>
@@ -619,7 +619,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gG-xZ-TIV">
-                                <rect key="frame" x="20" y="525" width="280" height="0.5"/>
+                                <rect key="frame" x="20" y="525" width="280" height="1"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.25" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="hKb-WQ-FN0"/>
@@ -1150,25 +1150,25 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePg-dk-slQ">
                                 <rect key="frame" x="0.0" y="184" width="320" height="200"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wyo-tk-JbR">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="0.5"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wyo-tk-JbR">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="yy7-el-RW3"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="411" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="236" translatesAutoresizingMaskIntoConstraints="NO" id="uvz-hk-Nr4">
-                                        <rect key="frame" x="42" y="50" width="236" height="101"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="411" contentMode="left" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="uvz-hk-Nr4">
+                                        <rect key="frame" x="20" y="50" width="280" height="101"/>
                                         <string key="text">breadwallet v%ver%
 Copyright © 2014 Aaron Voisine
 
 This app is open source:
 http://breadwallet.com</string>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4X-xw-xAl">
-                                        <rect key="frame" x="0.0" y="199" width="320" height="0.5"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G4X-xw-xAl">
+                                        <rect key="frame" x="0.0" y="199" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="UhR-to-ytR"/>
@@ -1281,7 +1281,7 @@ http://breadwallet.com</string>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet-white" translatesAutoresizingMaskIntoConstraints="NO" id="8lh-UZ-tbs">
-                                    <rect key="frame" x="0.0" y="0.0" width="97.5" height="18"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="98" height="18"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1383,7 +1383,7 @@ http://breadwallet.com</string>
                                 <rect key="frame" x="0.0" y="264" width="320" height="105"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LK7-eX-ZgB">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="0.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="l2b-EL-NOY"/>
@@ -1396,7 +1396,7 @@ http://breadwallet.com</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mcG-j3-eTm">
-                                        <rect key="frame" x="0.0" y="104.5" width="320" height="0.5"/>
+                                        <rect key="frame" x="0.0" y="105" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="B43-b5-4Rt"/>
