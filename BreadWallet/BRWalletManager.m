@@ -271,24 +271,23 @@ static NSData *getKeychainData(NSString *key)
             NSLog(@"%@", connectionError);
             return;
         }
-        /*
+        
         NSError *error = nil;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         
-        if (error || ! [json isKindOfClass:[NSDictionary class]] ||
-            ! [json[@"return"] isKindOfClass:[NSDictionary class]] ||
-            ! [json[@"return"][@"markets"] isKindOfClass:[NSDictionary class]] ||
-            ! [json[@"return"][@"markets"][@"VTC"] isKindOfClass:[NSDictionary class]] ||
-            ! [json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"] isKindOfClass:[NSNumber class]]) {
+        if (error
+            || ! [json isKindOfClass:[NSDictionary class]]
+            || ! [json[@"return"] isKindOfClass:[NSDictionary class]]
+            || ! [json[@"return"][@"markets"] isKindOfClass:[NSDictionary class]]
+            || ! [json[@"return"][@"markets"][@"VTC"] isKindOfClass:[NSDictionary class]]
+            //|| ! [json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"] isKindOfClass:[NSNumber class]]
+            ) {
                 NSLog(@"unexpected response from pubapi.cryptsy.com:\n%@",
                       [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 return;
             }
         
         NSNumber *vtcBtcValue = json[@"return"][@"markets"][@"VTC"][@"lasttradeprice"];
-         */
-        
-        NSNumber *vtcBtcValue = [NSNumber numberWithFloat:.0012];
         
         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:TICKER_URL]
                                              cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
