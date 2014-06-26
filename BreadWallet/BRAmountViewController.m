@@ -59,14 +59,23 @@
 
     self.amountField.placeholder = [m stringForAmount:0];
     [self.decimalButton setTitle:m.format.currencyDecimalSeparator forState:UIControlStateNormal];
+    
+    UIButton *titleLabel = [UIButton buttonWithType:UIButtonTypeCustom];
+    [titleLabel setTitle:[NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
+                          [m localCurrencyStringForAmount:m.wallet.balance]] forState:UIControlStateNormal];
+    [titleLabel addTarget:self action:@selector(titleTap:) forControlEvents:UIControlEventTouchUpInside];
+    [titleLabel setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    self.navigationItem.titleView = titleLabel;
 
     self.balanceObserver =
         [[NSNotificationCenter defaultCenter] addObserverForName:BRWalletBalanceChangedNotification object:nil queue:nil
         usingBlock:^(NSNotification *note) {
             if ([[BRPeerManager sharedInstance] syncProgress] < 1.0) return; // wait for sync before updating balance
 
-            self.navigationItem.title = [NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
-                                         [m localCurrencyStringForAmount:m.wallet.balance]];
+            UIButton *titleLabel = (UIButton *)self.navigationItem.titleView;
+            
+            [titleLabel setTitle:[NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
+                                  [m localCurrencyStringForAmount:m.wallet.balance]] forState:UIControlStateNormal];
         }];
 }
 
@@ -108,6 +117,17 @@
 }
 
 #pragma mark - IBAction
+
+- (IBAction) titleTap:(id) sender
+{
+    BRWalletManager *m = [BRWalletManager sharedInstance];
+    uint64_t fees = [m.wallet transactionFeeFor:m.wallet.balance to:self.request.paymentAddress];
+    self.request.amount = [BRWalletManager sharedInstance].wallet.balance - fees;
+    
+    if (self.request.amount == 0) return;
+    
+    [self.delegate amountViewController:self selectedAmount:self.request.amount];
+}
 
 - (IBAction)number:(id)sender
 {

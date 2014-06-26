@@ -52,6 +52,9 @@
 // returns an unsigned transaction that sends the specified amount from the wallet to the given address
 - (BRTransaction *)transactionFor:(uint64_t)amount to:(NSString *)address withFee:(BOOL)fee;
 
+// returns the amount of fees for an amount to an address
+- (uint64_t) transactionFeeFor:(uint64_t)amount to:(NSString *)address;
+
 // returns an unsigned transaction that sends the specified amounts from the wallet to the specified output scripts
 - (BRTransaction *)transactionForAmounts:(NSArray *)amounts toOutputScripts:(NSArray *)scripts withFee:(BOOL)fee;
 
