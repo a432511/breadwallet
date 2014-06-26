@@ -1830,6 +1830,7 @@
 		75D5F3EE191EC270004AB296 /* VertletTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VertletTests-Info.plist"; sourceTree = "<group>"; };
 		75D5F3F0191EC270004AB296 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		75D5F3F2191EC270004AB296 /* BreadWalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BreadWalletTests.m; sourceTree = "<group>"; };
+		EA7CEB57195BCC67003267DD /* BRCheckpoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRCheckpoints.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2165,6 +2166,7 @@
 				752E28BF19234C3600DB5A3C /* BRPaymentProtocol.m */,
 				752E28C019234C3600DB5A3C /* BRPaymentRequest.h */,
 				752E28C119234C3600DB5A3C /* BRPaymentRequest.m */,
+				EA7CEB57195BCC67003267DD /* BRCheckpoints.h */,
 			);
 			name = Models;
 			sourceTree = "<group>";
