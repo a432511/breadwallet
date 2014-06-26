@@ -2,7 +2,7 @@
 "%@ from:%@" = "%1$@ from:%2$@";
 
 /* No comment provided by engineer. */
-"%@ is for 'bits'. %@ = 1 bitcoin" = "%1$@ is for 'bits'. %2$@ = 1 bitcoin";
+"%@ is for 'bits'. %@ = 1 vertcoin" = "%1$@ is for 'bits'. %2$@ = 1 vertcoin";
 
 /* No comment provided by engineer. */
 "%@ to:%@" = "%1$@ to:%2$@";
@@ -47,16 +47,16 @@
 "bad signature" = "bad signature";
 
 /* No comment provided by engineer. */
-"Bitcoin address" = "Bitcoin address";
+"Vertcoin address" = "Vertcoin address";
 
 /* No comment provided by engineer. */
-"Bitcoin addresses can also be copied to the clipboard. A bitcoin address always starts with '1'." = "Bitcoin addresses can also be copied to the clipboard. A bitcoin address always starts with '1'.";
+"Vertcoin addresses can also be copied to the clipboard. A vertcoin address always starts with 'V'." = "Vertcoin addresses can also be copied to the clipboard. A vertcoin address always starts with 'V'.";
 
 /* No comment provided by engineer. */
-"bitcoin payments can't be less than %@" = "bitcoin payments can't be less than %@";
+"vertcoin payments can't be less than %@" = "vertcoin payments can't be less than %@";
 
 /* No comment provided by engineer. */
-"bitcoin transaction not signed" = "bitcoin transaction not signed";
+"vertcoin transaction not signed" = "vertcoin transaction not signed";
 
 /* No comment provided by engineer. */
 "cancel" = "cancel";
@@ -68,7 +68,7 @@
 "checking private key balance..." = "checking private key balance...";
 
 /* No comment provided by engineer. */
-"clipboard doesn't contain a valid bitcoin address" = "clipboard doesn't contain a valid bitcoin address";
+"clipboard doesn't contain a valid vertcoin address" = "clipboard doesn't contain a valid vertcoin address";
 
 /* No comment provided by engineer. */
 "confirm payment" = "confirm payment";
@@ -92,10 +92,10 @@
 "couldn't sweep balance" = "couldn't sweep balance";
 
 /* No comment provided by engineer. */
-"couldn't transmit payment to bitcoin network" = "couldn't transmit payment to bitcoin network";
+"couldn't transmit payment to vertcoin network" = "couldn't transmit payment to vertcoin network";
 
 /* No comment provided by engineer. */
-"DO NOT let anyone see your backup phrase or they can spend your bitcoins." = "DO NOT let anyone see your backup phrase or they can spend your bitcoins.";
+"DO NOT let anyone see your backup phrase or they can spend your vertcoins." = "DO NOT let anyone see your backup phrase or they can spend your vertcoins.";
 
 /* No comment provided by engineer. */
 "email" = "email";
@@ -104,7 +104,7 @@
 "email not configured" = "email not configured";
 
 /* No comment provided by engineer. */
-"error signing bitcoin transaction" = "error signing bitcoin transaction";
+"error signing vertcoin transaction" = "error signing vertcoin transaction";
 
 /* No comment provided by engineer. */
 "error signing transaction" = "error signing transaction";
@@ -119,7 +119,7 @@
 "INVALID  " = "INVALID  ";
 
 /* No comment provided by engineer. */
-"Let others scan this QR code to get your bitcoin address. Anyone can send bitcoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your bitcoin address. Anyone can send bitcoins to your wallet by transferring them to your address.";
+"Let others scan this QR code to get your bitcoin address. Anyone can send bitcoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
 
 /* No comment provided by engineer. */
 "missing certificate" = "missing certificate";
@@ -131,16 +131,16 @@
 "no peers found" = "no peers found";
 
 /* No comment provided by engineer. */
-"not a bitcoin QR code" = "not a bitcoin QR code";
+"not a vertcoin QR code" = "not a vertcoin QR code";
 
 /* No comment provided by engineer. */
-"not a valid bitcoin address" = "not a valid bitcoin address";
+"not a valid vertcoin address" = "not a valid vertcoin address";
 
 /* No comment provided by engineer. */
 "not a valid private key" = "not a valid private key";
 
 /* No comment provided by engineer. */
-"not connected to the bitcoin network" = "not connected to the bitcoin network";
+"not connected to the vertcoin network" = "not connected to the vertcoin network";
 
 /* No comment provided by engineer. */
 "ok" = "ok";
@@ -149,7 +149,7 @@
 "pending  " = "pending  ";
 
 /* No comment provided by engineer. */
-"Receive bitcoins at this address: %@" = "Receive bitcoins at this address: %@";
+"Receive vertcoins at this address: %@" = "Receive vertcoins at this address: %@";
 
 /* No comment provided by engineer. */
 "received  " = "received  ";
@@ -173,10 +173,10 @@
 "rescan blockchain" = "rescan blockchain";
 
 /* No comment provided by engineer. */
-"Scan someone else's QR code to get their bitcoin address. You can send a payment to anyone with an address." = "Scan someone else's QR code to get their bitcoin address. You can send a payment to anyone with an address.";
+"Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address." = "Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address.";
 
 /* No comment provided by engineer. */
-"Send %@ (%@) from this private key into your wallet? The bitcoin network will receive a fee of %@ (%@)." = "Send %1$@ (%2$@) from this private key into your wallet? The bitcoin network will receive a fee of %3$@ (%4$@).";
+"Send %@ (%@) from this private key into your wallet? The vertcoin network will receive a fee of %@ (%@)." = "Send %1$@ (%2$@) from this private key into your wallet? The vertcoin network will receive a fee of %3$@ (%4$@).";
 
 /* No comment provided by engineer. */
 "sent  " = "sent  ";
@@ -200,16 +200,16 @@
 "swept!" = "swept!";
 
 /* No comment provided by engineer. */
-"the bitcoin network will receive a fee of %@ (%@)" = "the bitcoin network will receive a fee of %1$@ (%2$@)";
+"the vertcoin network will receive a fee of %@ (%@)" = "the vertcoin network will receive a fee of %1$@ (%2$@)";
 
 /* No comment provided by engineer. */
-"The standard bitcoin network fee is %@ (%@). Removing this fee may increase confirmation time." = "The standard bitcoin network fee is %1$@ (%2$@). Removing this fee may increase confirmation time.";
+"The standard vertcoin network fee is %@ (%@). Removing this fee may increase confirmation time." = "The standard vertcoin network fee is %1$@ (%2$@). Removing this fee may increase confirmation time.";
 
 /* No comment provided by engineer. */
-"This is your bitcoin address. Tap to copy it or send it by email or sms. The address will change each time you receive funds, but old addresses always work." = "This is your bitcoin address. Tap to copy it or send it by email or sms. The address will change each time you receive funds, but old addresses always work.";
+"This is your vertcoin address. Tap to copy it or send it by email or sms. The address will change each time you receive funds, but old addresses always work." = "This is your vertcoin address. Tap to copy it or send it by email or sms. The address will change each time you receive funds, but old addresses always work.";
 
 /* No comment provided by engineer. */
-"This is your bitcoin balance. Bitcoin is a currency. The exchange rate changes with the market." = "This is your bitcoin balance. Bitcoin is a currency. The exchange rate changes with the market.";
+"This is your vertcoin balance. Vertcoin is a currency. The exchange rate changes with the market." = "This is your vertcoin balance. Vertcoin is a currency. The exchange rate changes with the market.";
 
 /* No comment provided by engineer. */
 "this payment address is already in your wallet" = "this payment address is already in your wallet";

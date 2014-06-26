@@ -278,7 +278,7 @@ isSecure:(BOOL)isSecure
         if (self.tx && [m.wallet blockHeightUntilFree:self.tx] <= [[BRPeerManager sharedInstance] lastBlockHeight] +1 &&
             ! self.didAskFee && [[NSUserDefaults standardUserDefaults] boolForKey:SETTINGS_SKIP_FEE_KEY]) {
             [[[UIAlertView alloc] initWithTitle:nil message:[NSString
-             stringWithFormat:NSLocalizedString(@"The standard bitcoin network fee is %@ (%@). "
+             stringWithFormat:NSLocalizedString(@"The standard vertcoin network fee is %@ (%@). "
                                                 "Removing this fee may increase confirmation time.", nil),
              [m stringForAmount:self.tx.standardFee], [m localCurrencyStringForAmount:self.tx.standardFee]]
              delegate:self cancelButtonTitle:nil
@@ -321,7 +321,7 @@ isSecure:(BOOL)isSecure
     if (self.tx && [m.wallet blockHeightUntilFree:self.tx] <= [[BRPeerManager sharedInstance] lastBlockHeight] + 1 &&
         ! self.didAskFee && [[NSUserDefaults standardUserDefaults] boolForKey:SETTINGS_SKIP_FEE_KEY]) {
         [[[UIAlertView alloc] initWithTitle:nil message:[NSString
-          stringWithFormat:NSLocalizedString(@"The standard bitcoin network fee is %@ (%@). "
+          stringWithFormat:NSLocalizedString(@"The standard vertcoin network fee is %@ (%@). "
                                              "Removing this fee may increase confirmation time.", nil),
           [m stringForAmount:self.tx.standardFee], [m localCurrencyStringForAmount:self.tx.standardFee]]
           delegate:self cancelButtonTitle:nil
@@ -694,7 +694,7 @@ isSecure:(BOOL)isSecure
 //        //}
 //
 //        [[[UIAlertView alloc] initWithTitle:nil message:[NSString
-//          stringWithFormat:NSLocalizedString(@"the bitcoin network will receive a fee of %@ (%@)", nil), fee,
+//          stringWithFormat:NSLocalizedString(@"the vertcoin network will receive a fee of %@ (%@)", nil), fee,
 //          localCurrencyFee] delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil)
 //          otherButtonTitles:[NSString stringWithFormat:@"+ %@ (%@)", fee, localCurrencyFee], nil] show];
 //        return;
