@@ -1,5 +1,5 @@
 //
-//  NSManagedObject+Utils.m
+//  NSManagedObject+Sugar.m
 //
 //  Created by Aaron Voisine on 8/22/13.
 //  Copyright (c) 2013 Aaron Voisine <voisine@gmail.com>
@@ -22,12 +22,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NSManagedObject+Utils.h"
+#import "NSManagedObject+Sugar.h"
+#import <objc/runtime.h>
 
 static NSManagedObjectContextConcurrencyType _concurrencyType = NSMainQueueConcurrencyType;
 static NSUInteger _fetchBatchSize = 100;
 
-@implementation NSManagedObject (Utils)
+@implementation NSManagedObject (Sugar)
 
 #pragma mark - create objects
 
@@ -108,7 +109,7 @@ static NSUInteger _fetchBatchSize = 100;
 
     [[self context] performBlockAndWait:^{
         a = [[self context] executeFetchRequest:request error:&error];
-        if (! a) NSLog(@"%s:%d %s: %@", __FILE__, __LINE__, __FUNCTION__, error);
+        if (error) NSLog(@"%s:%d %s: %@", __FILE__, __LINE__, __FUNCTION__, error);
     }];
      
     return a;
@@ -147,7 +148,7 @@ static NSUInteger _fetchBatchSize = 100;
 
     [[self context] performBlockAndWait:^{
         count = [[self context] countForFetchRequest:request error:&error];
-        if (count == NSNotFound) NSLog(@"%s:%d %s: %@", __FILE__, __LINE__, __FUNCTION__, error);
+        if (error) NSLog(@"%s:%d %s: %@", __FILE__, __LINE__, __FUNCTION__, error);
     }];
     
     return count;
@@ -168,7 +169,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 #pragma mark - core data stack
 
-// call this before any NSManagedObject+Utils methods to use a concurrency type other than NSMainQueueConcurrencyType
+// call this before any NSManagedObject+Sugar methods to use a concurrency type other than NSMainQueueConcurrencyType
 + (void)setConcurrencyType:(NSManagedObjectContextConcurrencyType)type
 {
     _concurrencyType = type;
@@ -180,11 +181,10 @@ static NSUInteger _fetchBatchSize = 100;
     _fetchBatchSize = fetchBatchSize;
 }
 
-// Returns the managed object context for the application. If the context doesn't already exist,
-// it is created and bound to the persistent store coordinator for the application.
+// returns the managed object context for the application, or if the context doesn't already exist, creates it and binds
+// it to the persistent store coordinator for the application
 + (NSManagedObjectContext *)context
 {
-    static NSManagedObjectContext *writermoc = nil, *mainmoc = nil;
     static dispatch_once_t onceToken = 0;
     
     dispatch_once(&onceToken, ^{
@@ -219,24 +219,43 @@ static NSUInteger _fetchBatchSize = 100;
         }
 
         if (coordinator) {
+            NSManagedObjectContext *writermoc = nil, *mainmoc = nil;
+
             // create a separate context for writing to the persistent store asynchronously
             writermoc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
             writermoc.persistentStoreCoordinator = coordinator;
 
             mainmoc = [[NSManagedObjectContext alloc] initWithConcurrencyType:_concurrencyType];
             mainmoc.parentContext = writermoc;
-            
-            // this will save changes to the persistent store before the application terminates.
+
+            [NSManagedObject setContext:mainmoc];
+
+            // this will save changes to the persistent store before the application terminates
             [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil
              queue:nil usingBlock:^(NSNotification *note) {
                 [self saveContext];
             }];
         }
     });
-    
-    return mainmoc;
+
+    NSManagedObjectContext *context = objc_getAssociatedObject(self, @selector(context));
+
+    if (! context && self != [NSManagedObject class]) {
+        context = [NSManagedObject context];
+        [self setContext:context];
+    }
+
+    return (context == (id)[NSNull null]) ? nil : context;
 }
 
+// sets a different context for NSManagedObject+Sugar methods to use for this type of entity
++ (void)setContext:(NSManagedObjectContext *)context
+{
+    objc_setAssociatedObject(self, @selector(context), context ? context : [NSNull null],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+// persists changes (this is called automatically for the main context when the app terminates)
 + (void)saveContext
 {
     if (! [[self context] hasChanges]) return;
@@ -252,9 +271,8 @@ static NSUInteger _fetchBatchSize = 100;
         }
 
         [[self context].parentContext performBlock:^{
-            NSUInteger taskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
-            NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
             NSError *error = nil;
+            NSUInteger taskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
 
             // write changes to persistent store
             if ([[self context].parentContext hasChanges] && ! [[self context].parentContext save:&error]) {
@@ -264,7 +282,6 @@ static NSUInteger _fetchBatchSize = 100;
 #endif
             }
 
-            NSLog(@"context save completed in %f seconds", [NSDate timeIntervalSinceReferenceDate] - t);
             [[UIApplication sharedApplication] endBackgroundTask:taskId];
         }];
     }];
@@ -272,7 +289,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 #pragma mark - entity methods
 
-// override this if entity name differes from class name
+// override this if entity name differs from class name
 + (NSString *)entityName
 {
     return NSStringFromClass([self class]);
@@ -292,30 +309,30 @@ static NSUInteger _fetchBatchSize = 100;
             sectionNameKeyPath:nil cacheName:nil];
 }
 
+// id value = entity[@"key"]; thread safe valueForKey:
+- (id)objectForKeyedSubscript:(id<NSCopying>)key
+{
+    __block id obj = nil;
+
+    [[self managedObjectContext] performBlockAndWait:^{
+        obj = [self valueForKey:(NSString *)key];
+    }];
+
+    return obj;
+}
+
+// entity[@"key"] = value; thread safe setValue:forKey:
+- (void)setObject:(id)obj forKeyedSubscript:(id<NSCopying>)key
+{
+    [[self managedObjectContext] performBlockAndWait:^{
+        [self setValue:obj forKey:(NSString *)key];
+    }];
+}
+
 - (void)deleteObject
 {
     [[self managedObjectContext] performBlockAndWait:^{
         [[self managedObjectContext] deleteObject:self];
-    }];
-}
-
-// thread safe valueForKey:
-- (id)get:(NSString *)key
-{
-    __block id value = nil;
-    
-    [[self managedObjectContext] performBlockAndWait:^{
-        value = [self valueForKey:key];
-    }];
-
-    return value;
-}
-
-// thread safe setValue:forKey:
-- (void)set:(NSString *)key to:(id)value
-{
-    [[self managedObjectContext] performBlockAndWait:^{
-        [self setValue:value forKey:key];
     }];
 }
 

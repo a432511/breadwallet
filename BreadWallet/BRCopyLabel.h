@@ -1,9 +1,9 @@
 //
-//  BRTxInputEntity.m
+//  BRCopyLabel.h
 //  BreadWallet
 //
-//  Created by Aaron Voisine on 8/26/13.
-//  Copyright (c) 2013 Aaron Voisine <voisine@gmail.com>
+//  Created by Aaron Voisine on 6/21/14.
+//  Copyright (c) 2014 Aaron Voisine <voisine@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,33 +23,14 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "BRTxInputEntity.h"
-#import "BRTransactionEntity.h"
-#import "BRTransaction.h"
-#import "BRTxOutputEntity.h"
-#import "NSManagedObject+Sugar.h"
+#import <UIKit/UIKit.h>
 
-@implementation BRTxInputEntity
+// subclass of uilabel that allows users to tap the contents and get a "copy" action bubble
+@interface BRCopyLabel : UILabel
 
-@dynamic txHash;
-@dynamic n;
-@dynamic signature;
-@dynamic sequence;
-@dynamic transaction;
+@property (nonatomic, strong) NSString *copyableText; // text that can be copied to clipboard, default is [UILabel text]
+@property (nonatomic, strong) UIColor *selectedColor; // should generally have an alpha of less than 0.8
 
-- (instancetype)setAttributesFromTx:(BRTransaction *)tx inputIndex:(NSUInteger)index
-{
-    [[self managedObjectContext] performBlockAndWait:^{
-        self.txHash = tx.inputHashes[index];
-        self.n = [tx.inputIndexes[index] intValue];
-        self.signature = (tx.inputSignatures[index] != [NSNull null]) ? tx.inputSignatures[index] : nil;
-        self.sequence = [tx.inputSequences[index] intValue];
-    
-        // mark previously unspent outputs as spent
-        [[BRTxOutputEntity objectsMatching:@"txHash == %@ && n == %d", self.txHash, self.n].lastObject setSpent:YES];
-    }];
-    
-    return self;
-}
+- (void)toggleCopyMenu;
 
 @end

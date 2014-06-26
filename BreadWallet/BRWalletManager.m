@@ -35,7 +35,7 @@
 #import "BRAddressEntity.h"
 #import "NSString+Base58.h"
 #import "NSMutableData+Bitcoin.h"
-#import "NSManagedObject+Utils.h"
+#import "NSManagedObject+Sugar.h"
 #import <netdb.h>
 #import "Reachability.h"
 
@@ -494,7 +494,7 @@ completion:(void (^)(BRTransaction *tx, NSError *error))completion
                                  withString:@"-#"];
     }
 
-    if (! amount) return [format stringFromNumber:@(0)];
+    if (amount == 0) return [format stringFromNumber:@(0)];
 
     NSString *symbol = [[NSUserDefaults standardUserDefaults] stringForKey:LOCAL_CURRENCY_SYMBOL_KEY];
     NSString *code = [[NSUserDefaults standardUserDefaults] stringForKey:LOCAL_CURRENCY_CODE_KEY];
@@ -508,8 +508,12 @@ completion:(void (^)(BRTransaction *tx, NSError *error))completion
     NSString *ret = [format stringFromNumber:@(price*amount/SATOSHIS)];
 
     // if the amount is too small to be represented in local currency (but is != 0) then return a string like "<$0.01"
-    if (amount != 0 && [[format numberFromString:ret] isEqual:@(0.0)]) {
+    if (amount > 0 && price*amount/SATOSHIS + DBL_EPSILON < 1.0/pow(10.0, format.maximumFractionDigits)) {
         ret = [@"<" stringByAppendingString:[format stringFromNumber:@(1.0/pow(10.0, format.maximumFractionDigits))]];
+    }
+    else if (amount < 0 && price*amount/SATOSHIS - DBL_EPSILON > -1.0/pow(10.0, format.maximumFractionDigits)) {
+        // technically should be '>', but '<' is more intuitive
+        ret = [@"<" stringByAppendingString:[format stringFromNumber:@(-1.0/pow(10.0, format.maximumFractionDigits))]];
     }
 
     return ret;

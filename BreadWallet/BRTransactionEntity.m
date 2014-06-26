@@ -29,7 +29,7 @@
 #import "BRAddressEntity.h"
 #import "BRTransaction.h"
 #import "BRMerkleBlock.h"
-#import "NSManagedObject+Utils.h"
+#import "NSManagedObject+Sugar.h"
 #import "NSString+Base58.h"
 #import "NSMutableData+Bitcoin.h"
 #import <CommonCrypto/CommonDigest.h>
@@ -41,6 +41,13 @@
 @dynamic inputs;
 @dynamic outputs;
 @dynamic lockTime;
+
++ (void)setContext:(NSManagedObjectContext *)context
+{
+    [super setContext:context];
+    [BRTxInputEntity setContext:context];
+    [BRTxOutputEntity setContext:context];
+}
 
 - (instancetype)setAttributesFromTx:(BRTransaction *)tx
 {

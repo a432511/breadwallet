@@ -24,10 +24,12 @@
 //  THE SOFTWARE.
 
 #import "BRSettingsViewController.h"
+#import "BRRootViewController.h"
 #import "BRWalletManager.h"
 #import "BRWallet.h"
 #import "BRPeerManager.h"
 #import "BRTransaction.h"
+#import "BRCopyLabel.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define TRANSACTION_CELL_HEIGHT 75
@@ -165,6 +167,36 @@
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)scanQR:(id)sender
+{
+    //TODO: show scanner in settings rather than dismissing
+    UINavigationController *nav = (id)self.navigationController.presentingViewController;
+
+    nav.view.alpha = 0.0;
+
+    [nav dismissViewControllerAnimated:NO completion:^{
+        [(id)[nav.viewControllers.firstObject sendViewController] scanQR:nil];
+        [UIView animateWithDuration:0.1 delay:1.5 options:0 animations:^{ nav.view.alpha = 1.0; } completion:nil];
+    }];
+}
+
+- (IBAction)toggle:(id)sender
+{
+    UILabel *l = (id)[[sender superview] viewWithTag:2];
+
+    [[NSUserDefaults standardUserDefaults] setBool:[sender isOn] forKey:SETTINGS_SKIP_FEE_KEY];
+
+    l.hidden = NO;
+    l.alpha = ([sender isOn]) ? 0.0 : 1.0;
+
+    [UIView animateWithDuration:0.2 animations:^{
+        l.alpha = ([sender isOn]) ? 1.0 : 0.0;
+    } completion:^(BOOL finished) {
+        l.alpha = 1.0;
+        l.hidden = ([sender isOn]) ? NO : YES;
+    }];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -177,8 +209,8 @@
     switch (section) {
         case 0: return self.transactions.count ? self.transactions.count : 1;
         case 1: return 2;
-        case 2: return 1;
-        case 3: return 1;
+        case 2: return 2;
+        case 3: return 2;
         default: NSAssert(FALSE, @"%s:%d %s: unkown section %d", __FILE__, __LINE__,  __func__, (int)section);
     }
 
@@ -188,11 +220,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *disclosureIdent = @"DisclosureCell", *transactionIdent = @"TransactionCell",
-                    *actionIdent = @"ActionCell", *restoreIdent = @"RestoreCell";
+                    *actionIdent = @"ActionCell", *toggleIdent = @"ToggleCell", *restoreIdent = @"RestoreCell";
     UITableViewCell *cell = nil;
-    UILabel *textLabel, *detailTextLabel, *unconfirmedLabel, *sentLabel, *noTxLabel, *localCurrencyLabel;
+    UILabel *textLabel, *unconfirmedLabel, *sentLabel, *noTxLabel, *localCurrencyLabel, *toggleLabel;
+    UISwitch *toggleSwitch;
+    BRCopyLabel *detailTextLabel;
 
-    //TODO: XXXXX make to/from address copiable
     switch (indexPath.section) {
         case 0:
             cell = [tableView dequeueReusableCellWithIdentifier:transactionIdent];
@@ -250,17 +283,20 @@
                     sentLabel.hidden = NO;
                 }
 
-                if (! address || (sent > 0 && [m.wallet containsAddress:address])) {
+                if (! address && sent > 0) {
                     textLabel.text = [m stringForAmount:sent];
                     localCurrencyLabel.text = [NSString stringWithFormat:@"(%@)",
                                                [m localCurrencyStringForAmount:sent]];
-                    detailTextLabel.text = NSLocalizedString(@"within wallet", nil);
+                    detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ within wallet", nil),
+                                            [self dateForTx:tx]];
+                    detailTextLabel.copyableText = @"";
                     sentLabel.text = NSLocalizedString(@"moved  ", nil);
                 }
                 else if (sent > 0) {
                     textLabel.text = [m stringForAmount:received - sent];
                     detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ to:%@", nil),
                                             [self dateForTx:tx], address];
+                    detailTextLabel.copyableText = address;
                     localCurrencyLabel.text = [NSString stringWithFormat:@"(%@)",
                                                [m localCurrencyStringForAmount:received - sent]];
                     sentLabel.text = NSLocalizedString(@"sent  ", nil);
@@ -268,7 +304,9 @@
                 }
                 else {
                     textLabel.text = [m stringForAmount:received];
-                    detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ to:%@", nil),
+                    detailTextLabel.copyableText = (address) ? address : @"";
+                    if (! address) address = [@" " stringByAppendingString:NSLocalizedString(@"unkown address", nil)];
+                    detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%@ from:%@", nil),
                                             [self dateForTx:tx], address];
                     localCurrencyLabel.text = [NSString stringWithFormat:@"(%@)",
                                                [m localCurrencyStringForAmount:received]];
@@ -277,13 +315,7 @@
                 }
 
                 sentLabel.layer.borderColor = sentLabel.textColor.CGColor;
-                
-                if (! detailTextLabel.text) {
-                    detailTextLabel.text =
-                        [NSString stringWithFormat:NSLocalizedString(@"%@ can't decode payment address", nil),
-                         [self dateForTx:tx]];
-                }
-            }
+             }
 
             break;
             
@@ -310,12 +342,48 @@
         case 2:
             cell = [tableView dequeueReusableCellWithIdentifier:actionIdent];
             [self setBackgroundForCell:cell atIndexPath:indexPath];
-            cell.textLabel.text = NSLocalizedString(@"rescan blockchain", nil);
+
+            switch (indexPath.row) {
+                case 0:
+                    cell.textLabel.text = NSLocalizedString(@"import private key", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"cameraguide-blue-small"];
+                    cell.imageView.alpha = 1.0;
+                    break;
+
+                case 1:
+                    cell.textLabel.text = NSLocalizedString(@"rescan blockchain", nil);
+                    cell.imageView.image = [UIImage imageNamed:@"rescan"];
+                    cell.imageView.alpha = 0.75;
+                    break;
+
+                default:
+                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
+                             (int)indexPath.row);
+            }
+
             break;
 
         case 3:
-            cell = [tableView dequeueReusableCellWithIdentifier:restoreIdent];
-            [self setBackgroundForCell:cell atIndexPath:indexPath];
+            switch (indexPath.row) {
+                case 0:
+                    cell = [tableView dequeueReusableCellWithIdentifier:toggleIdent];
+                    [self setBackgroundForCell:cell atIndexPath:indexPath];
+                    toggleLabel = (id)[cell viewWithTag:2];
+                    toggleSwitch = (id)[cell viewWithTag:3];
+                    toggleSwitch.on = [[NSUserDefaults standardUserDefaults] boolForKey:SETTINGS_SKIP_FEE_KEY];
+                    toggleLabel.hidden = (toggleSwitch.on) ? NO : YES;
+                    break;
+
+                case 1:
+                    cell = [tableView dequeueReusableCellWithIdentifier:restoreIdent];
+                    [self setBackgroundForCell:cell atIndexPath:indexPath];
+                    break;
+
+                default:
+                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.section %d", __FILE__, __LINE__,  __func__,
+                             (int)indexPath.section);
+            }
+
             break;
 
         default:
@@ -347,48 +415,49 @@
             return TRANSACTION_CELL_HEIGHT;
 
         case 1:
-            return 44;
+            return 44.0;
             
         case 2:
-            return 44;
+            return 44.0;
 
         case 3:
-            return 44;
+            return 44.0;
 
         default:
             NSAssert(FALSE, @"%s:%d %s: unkown indexPath.section %d", __FILE__, __LINE__,  __func__,
                      (int)indexPath.section);
     }
     
-    return 44;
+    return 44.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    CGFloat h = 0;
+    CGFloat h = 0.0;
     
     switch (section) {
         case 0:
-            return 22;
+            return 22.0;
             
         case 1:
-            return 22;
+            return 22.0;
 
         case 2:
-            return 22;
+            return 22.0;
 
         case 3:
-            h = tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - 20.0 - 44.0;
+            h = tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - 20.0;
+            h += [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:section]];
 
-            for (int s = 0; s < section; s++) {
-                h -= [self tableView:tableView heightForHeaderInSection:s];
+            for (int s = 0; s <= section; s++) {
+                if (s < section) h -= [self tableView:tableView heightForHeaderInSection:s];
 
                 for (int r = 0; r < [self tableView:tableView numberOfRowsInSection:s]; r++) {
                     h -= [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:r inSection:s]];
                 }
             }
 
-            return h > 22 ? h : 22;
+            return h > 22.0 ? h : 22.0;
         
         default:
             NSAssert(FALSE, @"%s:%d %s: unkown section %d", __FILE__, __LINE__,  __func__, (int)section);
@@ -422,14 +491,21 @@
     static NSString *warning = nil;
     UIViewController *c = nil;
     UILabel *l = nil;
+    NSUInteger i = 0;
+    UITableViewCell *cell = nil;
 
     if (! warning) {
         warning = NSLocalizedString(@"DO NOT let anyone see your backup phrase or they can spend your vertcoins.", nil);
     }
 
     switch (indexPath.section) {
-        case 0:
-            //TODO: show transaction details
+        case 0: // TODO: show transaction details
+            if (self.transactions.count > 0) {
+                i = [[self.tableView indexPathsForVisibleRows] indexOfObject:indexPath];
+                cell = (i < self.tableView.visibleCells.count) ? self.tableView.visibleCells[i] : nil;
+                [(id)[cell viewWithTag:2] toggleCopyMenu];
+            }
+
             break;
             
         case 1:
@@ -461,8 +537,21 @@
             break;
 
         case 2:
-            [[BRPeerManager sharedInstance] rescan];
-            [self done:nil];
+            switch (indexPath.row) {
+                case 0:
+                    [self scanQR:nil];
+                    break;
+
+                case 1:
+                    [[BRPeerManager sharedInstance] rescan];
+                    [self done:nil];
+                    break;
+
+                default:
+                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
+                             (int)indexPath.row);
+            }
+
             break;
 
         case 3: // start/restore is handled in storyboard

@@ -33,7 +33,7 @@
 #import "NSData+Hash.h"
 #import "NSData+Bitcoin.h"
 #import "NSMutableData+Bitcoin.h"
-#import "NSManagedObject+Utils.h"
+#import "NSManagedObject+Sugar.h"
 
 static NSData *txOutput(NSData *txHash, uint32_t n)
 {
@@ -80,6 +80,9 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
     // the core data store can be inconsistent with the keychain, need to add a consistency check
 
     [self.moc performBlockAndWait:^{
+        [BRAddressEntity setContext:self.moc];
+        [BRTransactionEntity setContext:self.moc];
+
         for (BRAddressEntity *e in [BRAddressEntity allObjects]) {
             NSMutableArray *a = e.internal ? self.internalAddresses : self.externalAddresses;
 
@@ -131,7 +134,7 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
     if (a.count >= gapLimit) return [a subarrayWithRange:NSMakeRange(0, gapLimit)];
 
     // get a single address first to avoid blocking receiveAddress and changeAddress
-    if (gapLimit > 1) [self addressesWithGapLimit:1 internal:internal];
+    if (a.count == 0 && gapLimit > 1) [self addressesWithGapLimit:1 internal:internal];
 
     @synchronized(self) {
         [a setArray:internal ? self.internalAddresses : self.externalAddresses];
@@ -212,8 +215,9 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
         [spentOutputs unionSet:spent]; // add inputs to spent output set
         n = 0;
 
+        //TODO: don't add outputs below TX_MIN_OUTPUT_AMOUNT
         //TODO: don't add coin generation outputs < 100 blocks deep, or non-final lockTime > 1 block/10min in future
-        //NOTE: balance/UTXOs will then need to be recalculated when best block changes
+        //NOTE: balance/UTXOs will then need to be recalculated when last block changes
         for (NSString *address in tx.outputAddresses) { // add outputs to UTXO set
             if ([self containsAddress:address]) {
                 [utxos addObject:txOutput(tx.txHash, n)];
@@ -272,6 +276,7 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
 
 - (NSArray *)recentTransactions
 {
+    //TODO: don't include receive transactions that don't have at least one wallet output >= TX_MIN_OUTPUT_AMOUNT
     return [self.transactions array];
 }
 
@@ -448,7 +453,7 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
 
     for (BRTransaction *tx in self.transactions) { // remove dependent transactions
         if (tx.blockHeight < transaction.blockHeight) break;
-        if (! [txHash isEqual:tx.txHash] && [tx.inputHashes containsObject:txHash]) [hashes addObject:hashes];
+        if (! [txHash isEqual:tx.txHash] && [tx.inputHashes containsObject:txHash]) [hashes addObject:tx.txHash];
     }
 
     for (NSData *hash in hashes) {
@@ -539,6 +544,7 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
     uint64_t amount = 0;
     NSUInteger n = 0;
 
+    //TODO: don't include outputs below TX_MIN_OUTPUT_AMOUNT
     for (NSString *address in transaction.outputAddresses) {
         if ([self containsAddress:address]) amount += [transaction.outputAmounts[n] unsignedLongLongValue];
         n++;
@@ -586,14 +592,14 @@ static NSData *txOutput(NSData *txHash, uint32_t n)
     return amount;
 }
 
-// returns the first non-change transaction output address, or nil if there aren't any
+// returns the first non-change output address for sends, first input address for receives, or nil if unkown
 - (NSString *)addressForTransaction:(BRTransaction *)transaction
 {
     uint64_t sent = [self amountSentByTransaction:transaction];
+    NSArray *addrs = (sent > 0) ? transaction.outputAddresses : transaction.inputAddresses;
 
-    for (NSString *address in transaction.outputAddresses) {
-        // first non-wallet address if it's a send transaction, first wallet address if it's a receive transaction
-        if ((sent > 0) != [self containsAddress:address]) return address;
+    for (NSString *address in addrs) {
+        if (address != (id)[NSNull null] && ! [self containsAddress:address]) return address;
     }
 
     return nil;
