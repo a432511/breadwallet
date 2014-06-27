@@ -227,6 +227,11 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
 
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        if (connectionError) {
+            completion(nil, connectionError);
+            return;
+        }
+
         if (! [response.MIMEType.lowercaseString isEqual:@"application/vertcoin-paymentack"] || data.length > 50000) {
             completion(nil, [NSError errorWithDomain:@"Vertlet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                              [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil), u.host]
