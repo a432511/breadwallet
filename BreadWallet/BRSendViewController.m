@@ -50,7 +50,7 @@
 @interface BRSendViewController ()
 
 @property (nonatomic, strong) NSString *addressInWallet;
-@property (nonatomic, assign) BOOL clearClipboard, showTips, didAskFee, removeFee;
+@property (nonatomic, assign) BOOL clearClipboard, showTips, didAskFee, removeFee, isManualEntry;
 @property (nonatomic, strong) id urlObserver, fileObserver;
 @property (nonatomic, strong) BRTransaction *tx, *sweepTx;
 @property (nonatomic, strong) BRPaymentRequest *request;
@@ -516,6 +516,21 @@ isSecure:(BOOL)isSecure
     else [self confirmRequest:req];
 }
 
+- (IBAction)payToManualEntry:(id)sender
+{
+    //TODO: add warning about address re-use
+    if ([self nextTip]) return;
+    
+    self.isManualEntry = YES;
+    UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"type address", nil)
+                                                message:@""
+                                               delegate:self
+                                      cancelButtonTitle:NSLocalizedString(@"ok", nil)
+                                      otherButtonTitles:nil];
+    a.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [a show];
+}
+
 - (IBAction)reset:(id)sender
 {
     if (self.navigationController.topViewController != self.parentViewController.parentViewController) {
@@ -576,7 +591,7 @@ isSecure:(BOOL)isSecure
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                 [(id)self.zbarController.cameraOverlayView setImage:[UIImage imageNamed:@"cameraguide.png"]];
 
-                if ([s hasPrefix:@"vertcoin:"] || [request.paymentAddress hasPrefix:@"1"]) {
+                if ([s hasPrefix:@"vertcoin:"] || [request.paymentAddress hasPrefix:@"V"]) {
                     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not a valid vertcoin address", nil)
                       message:request.paymentAddress delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil)
                       otherButtonTitles:nil] show];
@@ -629,6 +644,21 @@ isSecure:(BOOL)isSecure
 {
     if (buttonIndex == alertView.cancelButtonIndex) {
         [self cancel:nil];
+        
+        if(self.isManualEntry){
+            self.isManualEntry = NO;
+            
+            NSString *s = [alertView textFieldAtIndex:0].text;
+            BRPaymentRequest *req = [BRPaymentRequest requestWithString:s];
+            
+            if (! [req isValid] && ! [s isValidBitcoinPrivateKey] && ! [s isValidBitcoinBIP38Key]) {
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"this is not a valid vertcoin address", nil)
+                                            message:nil delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
+                [self cancel:nil];
+            }
+            else [self confirmRequest:req];
+        }
+        
         return;
     }
 
