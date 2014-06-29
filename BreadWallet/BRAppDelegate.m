@@ -25,12 +25,20 @@
 
 #import "BRAppDelegate.h"
 #import "BRPeerManager.h"
+#import "BRWalletManager.h"
+#import "BRWallet.h"
 
 #if BITCOIN_TESTNET
 #warning testnet build
 #endif
 
 @implementation BRAppDelegate
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    application.applicationIconBadgeNumber = 0;
+    [application cancelAllLocalNotifications];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -103,9 +111,25 @@ annotation:(id)annotation
 - (void)application:(UIApplication *)application
 performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    __block id syncFinishedObserver = nil, syncFailedObserver = nil;
+    __block id syncFinishedObserver = nil, syncFailedObserver = nil, balanceObserver = nil;
     __block void (^completion)(UIBackgroundFetchResult) = completionHandler;
     BRPeerManager *m = [BRPeerManager sharedInstance];
+    BRWalletManager *w = [BRWalletManager sharedInstance];
+    
+    
+    balanceObserver =
+    [[NSNotificationCenter defaultCenter] addObserverForName:BRWalletBalanceChangedNotification object:nil queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      //if ([m syncProgress] < 1.0) return; // wait for sync before updating balance
+                                                      // Set up Local Notifications
+                                                      [[UIApplication sharedApplication] cancelAllLocalNotifications];
+                                                      UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+                                                      NSDate *now = [NSDate date];
+                                                      localNotification.fireDate = now;
+                                                      localNotification.alertBody = [NSString stringWithFormat:@"Funds Received! Balance: %@ (%@)", [w stringForAmount:w.wallet.balance], [w localCurrencyStringForAmount:w.wallet.balance]];
+                                                      localNotification.soundName = UILocalNotificationDefaultSoundName;
+                                                      [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+                                                  }];
 
     if (m.syncProgress >= 1.0) {
         if (completion) completion(UIBackgroundFetchResultNoData);
