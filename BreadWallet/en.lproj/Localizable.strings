@@ -71,7 +71,13 @@
 "clipboard doesn't contain a valid vertcoin address" = "clipboard doesn't contain a valid vertcoin address";
 
 /* No comment provided by engineer. */
+"close app" = "close app";
+
+/* No comment provided by engineer. */
 "confirm payment" = "confirm payment";
+
+/* No comment provided by engineer. */
+"CONFIRM WIPE" = "CONFIRM WIPE";
 
 /* No comment provided by engineer. */
 "connect timeout" = "connect timeout";
@@ -95,6 +101,12 @@
 "couldn't transmit payment to vertcoin network" = "couldn't transmit payment to vertcoin network";
 
 /* No comment provided by engineer. */
+"DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds." = "DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds.";
+
+/* No comment provided by engineer. */
+"DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds. Wipe this wallet immediately and restore on a secure device." = "DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds. Wipe this wallet immediately and restore on a secure device.";
+
+/* No comment provided by engineer. */
 "DO NOT let anyone see your backup phrase or they can spend your vertcoins." = "DO NOT let anyone see your backup phrase or they can spend your vertcoins.";
 
 /* No comment provided by engineer. */
@@ -110,6 +122,9 @@
 "error signing transaction" = "error signing transaction";
 
 /* No comment provided by engineer. */
+"ignore" = "ignore";
+
+/* No comment provided by engineer. */
 "import private key" = "import private key";
 
 /* No comment provided by engineer. */
@@ -119,13 +134,16 @@
 "INVALID  " = "INVALID  ";
 
 /* No comment provided by engineer. */
-"Let others scan this QR code to get your bitcoin address. Anyone can send bitcoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
+"Let others scan this QR code to get your bitcoin address. Anyone can send vercoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
 
 /* No comment provided by engineer. */
 "missing certificate" = "missing certificate";
 
 /* No comment provided by engineer. */
 "moved  " = "moved  ";
+
+/* No comment provided by engineer. */
+"new phrase" = "new phrase";
 
 /* No comment provided by engineer. */
 "no peers found" = "no peers found";
@@ -176,6 +194,12 @@
 "Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address." = "Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address.";
 
 /* No comment provided by engineer. */
+"Screenshots are visible to other apps and devices. Generate a new backup phrase and keep it secret." = "Screenshots are visible to other apps and devices. Generate a new backup phrase and keep it secret.";
+
+/* No comment provided by engineer. */
+"Screenshots are visible to other apps and devices. Your funds are at risk. Transfer your balance to another wallet." = "Screenshots are visible to other apps and devices. Your funds are at risk. Transfer your balance to another wallet.";
+
+/* No comment provided by engineer. */
 "Send %@ (%@) from this private key into your wallet? The vertcoin network will receive a fee of %@ (%@)." = "Send %1$@ (%2$@) from this private key into your wallet? The vertcoin network will receive a fee of %3$@ (%4$@).";
 
 /* No comment provided by engineer. */
@@ -198,6 +222,9 @@
 
 /* No comment provided by engineer. */
 "swept!" = "swept!";
+
+/* No comment provided by engineer. */
+"the app will now close" = "the app will now close";
 
 /* No comment provided by engineer. */
 "the vertcoin network will receive a fee of %@ (%@)" = "the vertcoin network will receive a fee of %1$@ (%2$@)";
