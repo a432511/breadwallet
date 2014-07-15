@@ -49,7 +49,6 @@
 
 @interface BRSendViewController ()
 
-@property (nonatomic, strong) NSString *addressInWallet;
 @property (nonatomic, assign) BOOL clearClipboard, showTips, didAskFee, removeFee, isManualEntry;
 @property (nonatomic, strong) id urlObserver, fileObserver;
 @property (nonatomic, strong) BRTransaction *tx, *sweepTx;
@@ -199,16 +198,19 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     NSString *msg = (isSecure && safeName.length > 0) ? LOCK @" " : @"";
 
     if (! isSecure && self.protocolRequest.errorMessage.length > 0) msg = [msg stringByAppendingString:REDX @" "];
-    if (name.length > 0) msg = [msg stringByAppendingString:safeName];
+    if (safeName.length > 0) msg = [msg stringByAppendingString:safeName];
     if (! isSecure && msg.length > 0) msg = [msg stringByAppendingString:@"\n"];
     if (! isSecure || msg.length == 0) msg = [msg stringByAppendingString:address];
+
     msg = [msg stringByAppendingFormat:@"\n%@ (%@)", [m stringForAmount:amount - fee],
            [m localCurrencyStringForAmount:amount - fee]];
+
     if (fee > 0) {
         msg = [msg stringByAppendingFormat:NSLocalizedString(@"\nvertcoin network fee + %@ (%@)", nil),
                [m stringForAmount:fee], [m localCurrencyStringForAmount:fee]];
     }
-    if (memo.length > 0) msg = [[msg stringByAppendingString:@"\n"] stringByAppendingString:safeMemo];
+
+    if (safeMemo.length > 0) msg = [[msg stringByAppendingString:@"\n"] stringByAppendingString:safeMemo];
 
     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"confirm payment", nil) message:msg delegate:self
       cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:amountStr, nil] show];
@@ -254,8 +256,6 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
         [[[UIAlertView alloc] initWithTitle:nil
           message:NSLocalizedString(@"this payment address is already in your wallet", nil)
           delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
-
-        self.addressInWallet = request.paymentAddress;
         [self cancel:nil];
     }
     else if (request.amount == 0) {
@@ -322,7 +322,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
         return;
     }
 
-    //TODO: XXXX check for duplicates of already paid requests
+    //TODO: check for duplicates of already paid requests
 
     self.protocolRequest = protoReq;
     self.tx = [m.wallet transactionForAmounts:protoReq.details.outputAmounts
@@ -358,7 +358,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     }
 
     for (NSData *script in protoReq.details.outputScripts) {
-        NSString *addr = [NSString addressWithScript:script];
+        NSString *addr = [NSString addressWithScriptPubKey:script];
 
         address = [address stringByAppendingFormat:@"%@%@", (address.length > 0) ? @", " : @"",
                    (addr) ? addr : NSLocalizedString(@"unrecognized address", nil)];
@@ -754,7 +754,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
 
     [(id)self.parentViewController.parentViewController startActivityWithTimeout:30];
 
-    //TODO: XXXX don't sign on main thread
+    //TODO: don't sign on main thread
     if (! [m.wallet signTransaction:self.tx]) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"couldn't make payment", nil)
           message:NSLocalizedString(@"error signing vertcoin transaction", nil) delegate:nil
@@ -794,7 +794,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
             refundAmount += [amount unsignedLongLongValue];
         }
 
-        // TODO: XXXX keep track of commonName/memo to associate them with outputScripts
+        // TODO: keep track of commonName/memo to associate them with outputScripts
         BRPaymentProtocolPayment *payment =
             [[BRPaymentProtocolPayment alloc] initWithMerchantData:protoReq.details.merchantData
              transactions:@[self.tx] refundToAmounts:@[@(refundAmount)] refundToScripts:@[refundScript] memo:nil];

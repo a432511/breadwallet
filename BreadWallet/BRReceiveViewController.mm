@@ -39,7 +39,7 @@
 @interface BRReceiveViewController ()
 
 @property (nonatomic, strong) BRBubbleView *tipView;
-@property (nonatomic, assign) BOOL showTips;
+@property (nonatomic, assign) BOOL showTips, updated;
 
 @property (nonatomic, strong) IBOutlet UILabel *label;
 @property (nonatomic, strong) IBOutlet UIButton *addressButton;
@@ -64,6 +64,13 @@
     [self updateAddress];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    if (! self.updated) [self performSelector:@selector(updateAddress) withObject:nil afterDelay:0.1];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self hideTips];
@@ -79,8 +86,8 @@
 
     self.qrView.image = [QREncoder renderDataMatrix:[QREncoder encodeWithECLevel:1 version:1 string:s]
                          imageDimension:self.qrView.frame.size.width];
-
     [self.addressButton setTitle:self.paymentAddress forState:UIControlStateNormal];
+    self.updated = YES;
 }
 
 - (BRPaymentRequest *)paymentRequest
@@ -155,10 +162,10 @@
     a.title = [NSString stringWithFormat:NSLocalizedString(@"Receive vertcoins at this address: %@", nil),
                self.paymentAddress];
     a.delegate = self;
-    [a addButtonWithTitle:NSLocalizedString(@"copy", nil)];
-    if ([MFMailComposeViewController canSendMail]) [a addButtonWithTitle:NSLocalizedString(@"email", nil)];
+    [a addButtonWithTitle:NSLocalizedString(@"copy to clipboard", nil)];
+    if ([MFMailComposeViewController canSendMail]) [a addButtonWithTitle:NSLocalizedString(@"send as email", nil)];
 #if ! TARGET_IPHONE_SIMULATOR
-    if ([MFMessageComposeViewController canSendText]) [a addButtonWithTitle:NSLocalizedString(@"sms", nil)];
+    if ([MFMessageComposeViewController canSendText]) [a addButtonWithTitle:NSLocalizedString(@"send as message", nil)];
 #endif
     [a addButtonWithTitle:NSLocalizedString(@"cancel", nil)];
     a.cancelButtonIndex = a.numberOfButtons - 1;
@@ -172,8 +179,8 @@
 {
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
 
-    //TODO: XXXX allow user to specify a request amount
-    if ([title isEqual:NSLocalizedString(@"copy", nil)]) {
+    //TODO: allow user to specify a request amount
+    if ([title isEqual:NSLocalizedString(@"copy to clipboard", nil)]) {
         [[UIPasteboard generalPasteboard] setString:self.paymentAddress];
 
         [self.view
@@ -181,8 +188,8 @@
                        center:CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 - 130)]
                       popIn] popOutAfterDelay:2.0]];
     }
-    else if ([title isEqual:NSLocalizedString(@"email", nil)]) {
-        //TODO: XXXX implement BIP71 payment protocol mime attachement
+    else if ([title isEqual:NSLocalizedString(@"send as email", nil)]) {
+        //TODO: implement BIP71 payment protocol mime attachement
         // https://github.com/bitcoin/bips/blob/master/bip-0071.mediawiki
         
         if ([MFMailComposeViewController canSendMail]) {
@@ -200,7 +207,7 @@
               cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
         }
     }
-    else if ([title isEqual:NSLocalizedString(@"sms", nil)]) {
+    else if ([title isEqual:NSLocalizedString(@"send as message", nil)]) {
         if ([MFMessageComposeViewController canSendText]) {
             MFMessageComposeViewController *c = [MFMessageComposeViewController new];
             
