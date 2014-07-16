@@ -68,7 +68,13 @@
 "caution" = "caution";
 
 /* No comment provided by engineer. */
+"change pin" = "change pin";
+
+/* No comment provided by engineer. */
 "checking private key balance..." = "checking private key balance...";
+
+/* No comment provided by engineer. */
+"choose a pin" = "choose a pin";
 
 /* No comment provided by engineer. */
 "clipboard doesn't contain a valid vertcoin address" = "clipboard doesn't contain a valid vertcoin address";
@@ -92,7 +98,7 @@
 "copied" = "copied";
 
 /* No comment provided by engineer. */
-"copy" = "copy";
+"copy to clipboard" = "copy to clipboard";
 
 /* No comment provided by engineer. */
 "couldn't make payment" = "couldn't make payment";
@@ -104,6 +110,15 @@
 "couldn't transmit payment to vertcoin network" = "couldn't transmit payment to vertcoin network";
 
 /* No comment provided by engineer. */
+"day" = "day";
+
+/* No comment provided by engineer. */
+"days" = "days";
+
+/* No comment provided by engineer. */
+"delete" = "delete";
+
+/* No comment provided by engineer. */
 "DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds." = "DEVICE SECURITY COMPROMISED\nAny 'jailbreak' app can control this device and steal funds.";
 
 /* No comment provided by engineer. */
@@ -113,16 +128,28 @@
 "DO NOT let anyone see your backup phrase or they can spend your vertcoins." = "DO NOT let anyone see your backup phrase or they can spend your vertcoins.";
 
 /* No comment provided by engineer. */
-"email" = "email";
+"email not configured" = "email not configured";
 
 /* No comment provided by engineer. */
-"email not configured" = "email not configured";
+"enter current pin" = "enter current pin";
+
+/* No comment provided by engineer. */
+"enter pin" = "enter pin";
 
 /* No comment provided by engineer. */
 "error signing vertcoin transaction" = "error signing vertcoin transaction";
 
 /* No comment provided by engineer. */
 "error signing transaction" = "error signing transaction";
+
+/* No comment provided by engineer. */
+"fees are only optional for high priority transactions" = "fees are only optional for high priority transactions";
+
+/* No comment provided by engineer. */
+"hour" = "hour";
+
+/* No comment provided by engineer. */
+"hours" = "hours";
 
 /* No comment provided by engineer. */
 "ignore" = "ignore";
@@ -138,6 +165,12 @@
 
 /* No comment provided by engineer. */
 "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
+
+/* No comment provided by engineer. */
+"minute" = "minute";
+
+/* No comment provided by engineer. */
+"minutes" = "minutes";
 
 /* No comment provided by engineer. */
 "missing certificate" = "missing certificate";
@@ -170,6 +203,9 @@
 "pending  " = "pending  ";
 
 /* No comment provided by engineer. */
+"pin changed" = "pin changed";
+
+/* No comment provided by engineer. */
 "Receive vertcoins at this address: %@" = "Receive vertcoins at this address: %@";
 
 /* No comment provided by engineer. */
@@ -182,6 +218,9 @@
 "recieved" = "recieved";
 
 /* No comment provided by engineer. */
+"reenter pin" = "reenter pin";
+
+/* No comment provided by engineer. */
 "remove fee" = "remove fee";
 
 /* No comment provided by engineer. */
@@ -191,7 +230,13 @@
 "requested network \"%@\" instead of \"%@\"" = "requested network \"%1$@\" instead of \"%2$@\"";
 
 /* No comment provided by engineer. */
+"rescan" = "rescan";
+
+/* No comment provided by engineer. */
 "rescan blockchain" = "rescan blockchain";
+
+/* No comment provided by engineer. */
+"reset pin" = "reset pin";
 
 /* No comment provided by engineer. */
 "Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address." = "Scan someone else's QR code to get their vertcoin address. You can send a payment to anyone with an address.";
@@ -206,6 +251,12 @@
 "Send %@ (%@) from this private key into your wallet? The vertcoin network will receive a fee of %@ (%@)." = "Send %1$@ (%2$@) from this private key into your wallet? The vertcoin network will receive a fee of %3$@ (%4$@).";
 
 /* No comment provided by engineer. */
+"send as email" = "send as email";
+
+/* No comment provided by engineer. */
+"send as message" = "send as message";
+
+/* No comment provided by engineer. */
 "sent  " = "sent  ";
 
 /* No comment provided by engineer. */
@@ -216,9 +267,6 @@
 
 /* No comment provided by engineer. */
 "show" = "show";
-
-/* No comment provided by engineer. */
-"sms" = "sms";
 
 /* No comment provided by engineer. */
 "sms not currently available" = "sms not currently available";
@@ -260,6 +308,9 @@
 "transaction fees would cost more than the funds available on this private key (due to tiny \"dust\" deposits)" = "transaction fees would cost more than the funds available on this private key (due to tiny \"dust\" deposits)";
 
 /* No comment provided by engineer. */
+"transaction rejected" = "transaction rejected";
+
+/* No comment provided by engineer. */
 "unexpected response from %@" = "unexpected response from %@";
 
 /* No comment provided by engineer. */
@@ -284,8 +335,16 @@
 "unverified  " = "unverified  ";
 
 /* No comment provided by engineer. */
+"wallet disabled\n\ntry again after block #%u\n(about %@)" = "wallet disabled\n\ntry again after block #%1$u\n(about %2$@)";
+
+/* No comment provided by engineer. */
+"wallet disabled\n\ntry again in %@" = "wallet disabled\n\ntry again in %@";
+
+/* No comment provided by engineer. */
 "WARNING" = "WARNING";
 
 /* No comment provided by engineer. */
 "wipe" = "wipe";
 
+/* No comment provided by engineer. */
+"Your wallet may be out of sync.\nThis can often be fixed by rescaning the blockchain." = "Your wallet may be out of sync.\nThis can often be fixed by rescaning the blockchain.";

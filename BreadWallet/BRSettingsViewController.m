@@ -25,12 +25,13 @@
 
 #import "BRSettingsViewController.h"
 #import "BRRootViewController.h"
+#import "BRPINViewController.h"
 #import "BRWalletManager.h"
 #import "BRWallet.h"
 #import "BRPeerManager.h"
 #import "BRTransaction.h"
 #import "BRCopyLabel.h"
-#import <QuartzCore/QuartzCore.h>
+#import "BRBubbleView.h"
 
 #define TRANSACTION_CELL_HEIGHT 75
 
@@ -40,44 +41,16 @@
 @property (nonatomic, strong) NSMutableDictionary *txDates;
 @property (nonatomic, strong) id balanceObserver, txStatusObserver;
 @property (nonatomic, strong) UIImageView *wallpaper;
+@property (nonatomic, strong) BRBubbleView *tipView;
 
 @end
 
 @implementation BRSettingsViewController
 
-//TODO: only show most recent 10-20 transactions and have a separate page for the rest with section headers for each day
+//TODO: XXXX only show most recent 5 tx and have a separate page for the rest with section headers for each day
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.balanceObserver =
-        [[NSNotificationCenter defaultCenter] addObserverForName:BRWalletBalanceChangedNotification object:nil queue:nil
-        usingBlock:^(NSNotification *note) {
-            BRWalletManager *m = [BRWalletManager sharedInstance];
-            NSUInteger count = self.transactions.count;
-
-            if (! m.wallet) return;
-            self.navigationItem.title = [NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
-                                         [m localCurrencyStringForAmount:m.wallet.balance]];
-
-            self.transactions = [NSArray arrayWithArray:m.wallet.recentTransactions];
-            
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-             withRowAnimation:(self.transactions.count == count) ? UITableViewRowAnimationNone :
-             UITableViewRowAnimationAutomatic];
-        }];
-
-    self.txStatusObserver =
-        [[NSNotificationCenter defaultCenter] addObserverForName:BRPeerManagerTxStatusNotification object:nil queue:nil
-        usingBlock:^(NSNotification *note) {
-            BRWalletManager *m = [BRWalletManager sharedInstance];
-
-            if (! m.wallet) return;
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
-             withRowAnimation:UITableViewRowAnimationNone];
-        }];
-
-//    BRWalletManager *m = [BRWalletManager sharedInstance];
 
     self.txDates = [NSMutableDictionary dictionary];
     self.wallpaper = [[UIImageView alloc] initWithFrame:self.navigationController.view.bounds];
@@ -85,18 +58,68 @@
     self.wallpaper.contentMode = UIViewContentModeLeft;
     [self.navigationController.view insertSubview:self.wallpaper atIndex:0];
     self.navigationController.delegate = self;
-//    self.navigationItem.title = [NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
-//                                 [m localCurrencyStringForAmount:m.wallet.balance]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
     self.transactions = [NSArray arrayWithArray:[[[BRWalletManager sharedInstance] wallet] recentTransactions]];
+
+    if (! self.balanceObserver) {
+        self.balanceObserver =
+            [[NSNotificationCenter defaultCenter] addObserverForName:BRWalletBalanceChangedNotification object:nil
+            queue:nil usingBlock:^(NSNotification *note) {
+                BRWalletManager *m = [BRWalletManager sharedInstance];
+                NSUInteger count = self.transactions.count;
+
+                if (! m.wallet) return;
+                self.navigationItem.title = [NSString stringWithFormat:@"%@ (%@)", [m stringForAmount:m.wallet.balance],
+                                             [m localCurrencyStringForAmount:m.wallet.balance]];
+
+                self.transactions = [NSArray arrayWithArray:m.wallet.recentTransactions];
+
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                 withRowAnimation:(self.transactions.count == count) ? UITableViewRowAnimationNone :
+                                  UITableViewRowAnimationAutomatic];
+            }];
+    }
+
+    if (! self.txStatusObserver) {
+        self.txStatusObserver =
+            [[NSNotificationCenter defaultCenter] addObserverForName:BRPeerManagerTxStatusNotification object:nil
+            queue:nil usingBlock:^(NSNotification *note) {
+                BRWalletManager *m = [BRWalletManager sharedInstance];
+                                                      
+                if (! m.wallet) return;
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                 withRowAnimation:UITableViewRowAnimationNone];
+            }];
+    }
 }
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)viewDidDisappear:(BOOL)animated
+{
+    if (self.tipView) [self.tipView popOut];
+    self.tipView = nil;
+    self.transactions = nil;
+    if (self.balanceObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.balanceObserver];
+    self.balanceObserver = nil;
+    if (self.txStatusObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.txStatusObserver];
+    self.txStatusObserver = nil;
+
+    [super viewDidDisappear:animated];
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if (self.tipView) return NO;
+    return YES;
+}
+
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
 //    [super prepareForSegue:segue sender:sender];
 //
 //    [segue.destinationViewController setTransitioningDelegate:self];
@@ -190,6 +213,21 @@
 
     [[NSUserDefaults standardUserDefaults] setBool:[sender isOn] forKey:SETTINGS_SKIP_FEE_KEY];
 
+    if ([sender isOn]) {
+        self.tipView = [BRBubbleView
+                        viewWithText:NSLocalizedString(@"fees are only optional for high priority transactions", nil)
+                        tipPoint:[self.view convertPoint:CGPointMake([sender center].x, [sender frame].origin.y - 5.0)
+                                  fromView:[sender superview]] tipDirection:BRBubbleTipDirectionDown];
+        self.tipView.backgroundColor = [UIColor orangeColor];
+        self.tipView.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+        self.tipView.userInteractionEnabled = NO;
+        [self.view addSubview:[self.tipView popIn]];
+    }
+    else if (self.tipView) {
+        [self.tipView popOut];
+        self.tipView = nil;
+    }
+
     l.hidden = NO;
     l.alpha = ([sender isOn]) ? 0.0 : 1.0;
 
@@ -199,6 +237,11 @@
         l.alpha = 1.0;
         l.hidden = ([sender isOn]) ? NO : YES;
     }];
+}
+
+- (IBAction)about:(id)sender
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://vertlet.com"]];
 }
 
 #pragma mark - Table view data source
@@ -213,7 +256,7 @@
     switch (section) {
         case 0: return self.transactions.count ? self.transactions.count : 1;
         case 1: return 2;
-        case 2: return 2;
+        case 2: return 3;
         case 3: return 2;
         default: NSAssert(FALSE, @"%s:%d %s: unkown section %d", __FILE__, __LINE__,  __func__, (int)section);
     }
@@ -229,6 +272,9 @@
     UILabel *textLabel, *unconfirmedLabel, *sentLabel, *noTxLabel, *localCurrencyLabel, *toggleLabel;
     UISwitch *toggleSwitch;
     BRCopyLabel *detailTextLabel;
+
+    if (self.tipView) [self.tipView popOut];
+    self.tipView = nil;
 
     switch (indexPath.section) {
         case 0:
@@ -322,28 +368,8 @@
              }
 
             break;
-            
+
         case 1:
-            cell = [tableView dequeueReusableCellWithIdentifier:disclosureIdent];
-            [self setBackgroundForCell:cell atIndexPath:indexPath];
-
-            switch (indexPath.row) {
-                case 0:
-                    cell.textLabel.text = NSLocalizedString(@"about", nil);
-                    break;
-
-                case 1:
-                    cell.textLabel.text = NSLocalizedString(@"backup phrase", nil);
-                    break;
-                    
-                default:
-                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
-                             (int)indexPath.row);
-            }
-
-            break;
-            
-        case 2:
             cell = [tableView dequeueReusableCellWithIdentifier:actionIdent];
             [self setBackgroundForCell:cell atIndexPath:indexPath];
 
@@ -358,6 +384,31 @@
                     cell.textLabel.text = NSLocalizedString(@"rescan blockchain", nil);
                     cell.imageView.image = [UIImage imageNamed:@"rescan"];
                     cell.imageView.alpha = 0.75;
+                    break;
+
+                default:
+                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
+                             (int)indexPath.row);
+            }
+            
+            break;
+
+        case 2:
+            cell = [tableView dequeueReusableCellWithIdentifier:disclosureIdent];
+            [self setBackgroundForCell:cell atIndexPath:indexPath];
+
+            //TODO: XXXX local currency selector
+            switch (indexPath.row) {
+                case 0:
+                    cell.textLabel.text = NSLocalizedString(@"about", nil);
+                    break;
+
+                case 1:
+                    cell.textLabel.text = NSLocalizedString(@"backup phrase", nil);
+                    break;
+
+                case 2:
+                    cell.textLabel.text = NSLocalizedString(@"change pin", nil);
                     break;
 
                 default:
@@ -492,18 +543,22 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //TODO: include an option to generate a new wallet and sweep old balance if backup may have been compromized
-    static NSString *warning = nil;
     UIViewController *c = nil;
     UILabel *l = nil;
     NSUInteger i = 0;
     UITableViewCell *cell = nil;
+    NSMutableAttributedString *s = nil;
 
-    if (! warning) {
-        warning = NSLocalizedString(@"DO NOT let anyone see your backup phrase or they can spend your vertcoins.", nil);
+    if (self.tipView) {
+        [self.tipView popOut];
+        self.tipView = nil;
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        return;
     }
 
     switch (indexPath.section) {
-        case 0: // TODO: show transaction details
+        case 0: // transaction
+            // TODO: show transaction details
             if (self.transactions.count > 0) {
                 i = [[self.tableView indexPathsForVisibleRows] indexOfObject:indexPath];
                 cell = (i < self.tableView.visibleCells.count) ? self.tableView.visibleCells[i] : nil;
@@ -511,42 +566,14 @@
             }
 
             break;
-            
+
         case 1:
             switch (indexPath.row) {
-                case 0:
-                    //TODO: XXXX make url clickable
-                    c = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
-                    l = (id)[c.view viewWithTag:411];
-#if BITCOIN_TESTNET
-                    l.text = [l.text stringByReplacingOccurrencesOfString:@"%ver%" withString:@"%ver% (testnet)"];
-#endif
-                    l.text = [l.text stringByReplacingOccurrencesOfString:@"%ver%"
-                              withString:NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]];
-
-                    [self.navigationController pushViewController:c animated:YES];
-                    break;
-                    
-                case 1:
-                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil) message:warning delegate:self
-                      cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                      otherButtonTitles:NSLocalizedString(@"show", nil), nil] show];
-                    break;
-                    
-                default:
-                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
-                             (int)indexPath.row);
-            }
-
-            break;
-
-        case 2:
-            switch (indexPath.row) {
-                case 0:
+                case 0: // import private key
                     [self scanQR:nil];
                     break;
 
-                case 1:
+                case 1: // rescan blockchain
                     [[BRPeerManager sharedInstance] rescan];
                     [self done:nil];
                     break;
@@ -555,10 +582,51 @@
                     NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
                              (int)indexPath.row);
             }
+            
+            break;
+
+        case 2:
+            switch (indexPath.row) {
+                case 0: // about
+                    c = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
+                    l = (id)[c.view viewWithTag:411];
+                    s = [[NSMutableAttributedString alloc] initWithAttributedString:l.attributedText];
+#if BITCOIN_TESTNET
+                    [s replaceCharactersInRange:[s.string rangeOfString:@"%net%"] withString:@"%net% (testnet)"];
+#endif
+                    [s replaceCharactersInRange:[s.string rangeOfString:@"%ver%"]
+                     withString:NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]];
+                    [s replaceCharactersInRange:[s.string rangeOfString:@"%net%"] withString:@""];
+                    l.attributedText = s;
+                    [l.superview.gestureRecognizers.firstObject addTarget:self action:@selector(about:)];
+                    [self.navigationController pushViewController:c animated:YES];
+                    break;
+                    
+                case 1: // backup phrase
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
+                      message:NSLocalizedString(@"DO NOT let anyone see your backup phrase or they can spend your "
+                                                 "vertcoins.", nil) delegate:self
+                      cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                      otherButtonTitles:NSLocalizedString(@"show", nil), nil] show];
+                    break;
+
+                case 2: // change pin
+                    c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+                    [[[(id)c viewControllers] firstObject] setAppeared:YES];
+                    [[[(id)c viewControllers] firstObject] setCancelable:YES];
+                    [[[(id)c viewControllers] firstObject] setChangePin:YES];
+                    c.transitioningDelegate = self;
+                    [self.navigationController presentViewController:c animated:YES completion:nil];
+                    break;
+
+                default:
+                    NSAssert(FALSE, @"%s:%d %s: unkown indexPath.row %d", __FILE__, __LINE__,  __func__,
+                             (int)indexPath.row);
+            }
 
             break;
 
-        case 3: // start/restore is handled in storyboard
+        case 3: // start/restore another wallet handled by storyboard
             break;
 
         default:
@@ -576,11 +644,15 @@
         return;
     }
 
-    [self.navigationController
-     pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SeedViewController"] animated:YES];
+    UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+
+    [[[(id)c viewControllers] firstObject] setAppeared:YES];
+    [[[(id)c viewControllers] firstObject] setCancelable:YES];
+    c.transitioningDelegate = self;
+    [self.navigationController presentViewController:c animated:YES completion:nil];
 }
 
-#pragma mark UIViewControllerAnimatedTransitioning
+#pragma mark - UIViewControllerAnimatedTransitioning
 
 // This is used for percent driven interactive transitions, as well as for container controllers that have companion
 // animations that might need to synchronize with the main animation.
@@ -595,23 +667,45 @@
     UIView *v = transitionContext.containerView;
     UIViewController *to = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey],
                      *from = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    BOOL pop = (to == self || to == self.navigationController) ? YES : NO;
 
-    if (self.wallpaper.superview != v) [v insertSubview:self.wallpaper belowSubview:from.view];
+    if (self.tipView) [self.tipView popOut];
+    self.tipView = nil;
 
-    to.view.center = CGPointMake(v.frame.size.width*(to == self ? -1 : 3)/2, to.view.center.y);
-    [v addSubview:to.view];
+    if ([from.restorationIdentifier isEqual:@"PINNav"] && ! [[[(id)from viewControllers] firstObject] changePin] &&
+        [[[(id)from viewControllers] firstObject] success]) {
+        [self.navigationController
+         pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"SeedViewController"]
+         animated:NO];
 
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 usingSpringWithDamping:0.8
-     initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        to.view.center = from.view.center;
-        from.view.center = CGPointMake(v.frame.size.width*(to == self ? 3 : -1)/2, from.view.center.y);
-        self.wallpaper.center = CGPointMake(self.wallpaper.frame.size.width/2 -
-                                            v.frame.size.width*(to == self ? 0 : 1)*PARALAX_RATIO,
-                                            self.wallpaper.center.y);
-    } completion:^(BOOL finished) {
-        if (to == self) [from.view removeFromSuperview];
-        [transitionContext completeTransition:finished];
-    }];
+        to.view.frame = from.view.frame;
+        [v insertSubview:to.view belowSubview:from.view];
+
+        [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            from.view.alpha = 0.0;
+            from.view.transform = CGAffineTransformMakeScale(0.75, 0.75);
+        } completion:^(BOOL finished) {
+            [from.view removeFromSuperview];
+            [transitionContext completeTransition:finished];
+        }];
+    }
+    else {
+        if (self.wallpaper.superview != v) [v insertSubview:self.wallpaper belowSubview:from.view];
+        to.view.center = CGPointMake(v.frame.size.width*(pop ? -1 : 3)/2, to.view.center.y);
+        [v addSubview:to.view];
+
+        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0.0 usingSpringWithDamping:0.8
+         initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+             to.view.center = from.view.center;
+             from.view.center = CGPointMake(v.frame.size.width*(pop ? 3 : -1)/2, from.view.center.y);
+             self.wallpaper.center = CGPointMake(self.wallpaper.frame.size.width/2 -
+                                                 v.frame.size.width*(pop ? 0 : 1)*PARALAX_RATIO,
+                                                 self.wallpaper.center.y);
+         } completion:^(BOOL finished) {
+             if (pop) [from.view removeFromSuperview];
+             [transitionContext completeTransition:finished];
+         }];
+    }
 }
 
 #pragma mark - UINavigationControllerDelegate

@@ -95,31 +95,27 @@ CFAllocatorRef SecureAllocator()
 
 + (NSString *)base58WithData:(NSData *)d
 {
-    NSUInteger i = d.length*138/100 + 2;
-    char s[i];
     BN_CTX *ctx = BN_CTX_new();
-    BIGNUM base, x, r;
 
     BN_CTX_start(ctx);
-    BN_init(&base);
-    BN_init(&x);
-    BN_init(&r);
-    BN_set_word(&base, 58);
-    BN_bin2bn(d.bytes, (int)d.length, &x);
+
+    NSUInteger i = d.length*138/100 + 2;
+    char s[i];
+    BIGNUM *base = BN_CTX_get(ctx), *x = BN_CTX_get(ctx), *r = BN_CTX_get(ctx);
+
+    BN_set_word(base, 58);
+    BN_bin2bn(d.bytes, (int)d.length, x);
     s[--i] = '\0';
 
-    while (! BN_is_zero(&x)) {
-        BN_div(&x, &r, &x, &base, ctx);
-        s[--i] = base58chars[BN_get_word(&r)];
+    while (! BN_is_zero(x)) {
+        BN_div(x, r, x, base, ctx);
+        s[--i] = base58chars[BN_get_word(r)];
     }
     
     for (NSUInteger j = 0; j < d.length && *((const uint8_t *)d.bytes + j) == 0; j++) {
         s[--i] = base58chars[0];
     }
 
-    BN_clear_free(&r);
-    BN_clear_free(&x);
-    BN_free(&base);
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
     
@@ -140,17 +136,16 @@ CFAllocatorRef SecureAllocator()
 
 - (NSData *)base58ToData
 {
-    NSMutableData *d = [NSMutableData secureDataWithCapacity:self.length*138/100 + 1];
-    unsigned int b;
     BN_CTX *ctx = BN_CTX_new();
-    BIGNUM base, x, y;
 
     BN_CTX_start(ctx);
-    BN_init(&base);
-    BN_init(&x);
-    BN_init(&y);
-    BN_set_word(&base, 58);
-    BN_zero(&x);
+
+    NSMutableData *d = [NSMutableData secureDataWithCapacity:self.length*138/100 + 1];
+    unsigned int b;
+    BIGNUM *base = BN_CTX_get(ctx), *x = BN_CTX_get(ctx), *y = BN_CTX_get(ctx);
+
+    BN_set_word(base, 58);
+    BN_zero(x);
     
     for (NSUInteger i = 0; i < self.length && [self characterAtIndex:i] == base58chars[0]; i++) {
         [d appendBytes:"\0" length:1];
@@ -187,19 +182,16 @@ CFAllocatorRef SecureAllocator()
                 goto breakout;
         }
         
-        BN_mul(&x, &x, &base, ctx);
-        BN_set_word(&y, b);
-        BN_add(&x, &x, &y);
+        BN_mul(x, x, base, ctx);
+        BN_set_word(y, b);
+        BN_add(x, x, y);
     }
     
 breakout:
-    d.length += BN_num_bytes(&x);
-    BN_bn2bin(&x, (unsigned char *)d.mutableBytes + d.length - BN_num_bytes(&x));
+    d.length += BN_num_bytes(x);
+    BN_bn2bin(x, (unsigned char *)d.mutableBytes + d.length - BN_num_bytes(x));
 
     OPENSSL_cleanse(&b, sizeof(b));
-    BN_clear_free(&y);
-    BN_clear_free(&x);
-    BN_free(&base);
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
     
@@ -218,7 +210,11 @@ breakout:
     return hex;
 }
 
-+ (NSString *)addressWithScript:(NSData *)script
+// NOTE: It's important here to be permissive with scriptSig (spends) and strict with scriptPubKey (receives). If we
+// miss a receive transaction, only that transaction's funds are missed, however if we accept a receive transaction that
+// we are unable to correctly sign later, then the entire wallet balance after that point would become stuck with the
+// current coin selection code
++ (NSString *)addressWithScriptPubKey:(NSData *)script
 {
     if (script == (id)[NSNull null]) return nil;
 
@@ -231,24 +227,48 @@ breakout:
     v = BITCOIN_PUBKEY_ADDRESS_TEST;
 #endif
 
-    if (l >= 5 && [elem[l - 3] intValue] == 20 && [elem[l - 2] intValue] == OP_EQUALVERIFY &&
-        [elem[l - 1] intValue] == OP_CHECKSIG) { // pay-to-pubkey-hash scriptPubKey
+    if (l == 5 && [elem[0] intValue] == OP_DUP && [elem[1] intValue] == OP_HASH160 && [elem[2] intValue] == 20 &&
+        [elem[3] intValue] == OP_EQUALVERIFY && [elem[4] intValue] == OP_CHECKSIG) {
+        // pay-to-pubkey-hash scriptPubKey
         [d appendBytes:&v length:1];
-        [d appendData:elem[l - 3]];
+        [d appendData:elem[2]];
     }
-    else if (l >= 2 && [elem[l - 2] intValue] <= OP_PUSHDATA4 && [elem[l - 2] intValue] > 0 &&
-             ([elem[l - 1] intValue] == 65 || [elem[l - 1] intValue] == 33)) { // pay-to-pubkey-hash scriptSig
-        [d appendBytes:&v length:1];
-        [d appendData:[elem[l - 1] hash160]];
-    }
-    else if (l >= 3 && [elem[l - 3] intValue] == OP_HASH160 && [elem[l - 2] intValue] == 20 &&
-             [elem[l - 1] intValue] == OP_EQUAL) { // pay-to-script-hash scriptPubKey
+    else if (l == 3 && [elem[0] intValue] == OP_HASH160 && [elem[1] intValue] == 20 && [elem[2] intValue] == OP_EQUAL) {
+        // pay-to-script-hash scriptPubKey
         v = BITCOIN_SCRIPT_ADDRESS;
 #if BITCOIN_TESTNET
         v = BITCOIN_SCRIPT_ADDRESS_TEST;
 #endif
         [d appendBytes:&v length:1];
-        [d appendData:elem[l - 2]];
+        [d appendData:elem[1]];
+    }
+    else if (l == 2 && ([elem[0] intValue] == 65 || [elem[0] intValue] == 33) && [elem[1] intValue] == OP_CHECKSIG) {
+        // pay-to-pubkey scriptPubKey
+        [d appendBytes:&v length:1];
+        [d appendData:[elem[0] hash160]];
+    }
+    else return nil; // unknown script type
+
+    return [self base58checkWithData:d];
+}
+
++ (NSString *)addressWithScriptSig:(NSData *)script
+{
+    if (script == (id)[NSNull null]) return nil;
+
+    NSArray *elem = [script scriptElements];
+    NSUInteger l = elem.count;
+    NSMutableData *d = [NSMutableData data];
+    uint8_t v = BITCOIN_PUBKEY_ADDRESS;
+
+#if BITCOIN_TESTNET
+    v = BITCOIN_PUBKEY_ADDRESS_TEST;
+#endif
+
+    if (l >= 2 && [elem[l - 2] intValue] <= OP_PUSHDATA4 && [elem[l - 2] intValue] > 0 &&
+        ([elem[l - 1] intValue] == 65 || [elem[l - 1] intValue] == 33)) { // pay-to-pubkey-hash scriptSig
+        [d appendBytes:&v length:1];
+        [d appendData:[elem[l - 1] hash160]];
     }
     else if (l >= 2 && [elem[l - 2] intValue] <= OP_PUSHDATA4 && [elem[l - 2] intValue] > 0 &&
              [elem[l - 1] intValue] <= OP_PUSHDATA4 && [elem[l - 1] intValue] > 0) { // pay-to-script-hash scriptSig
@@ -259,17 +279,12 @@ breakout:
         [d appendBytes:&v length:1];
         [d appendData:[elem[l - 1] hash160]];
     }
-    else if (l >= 2 && ([elem[l - 2] intValue] == 65 || [elem[l - 2] intValue] == 33) &&
-             [elem[l - 1] intValue] == OP_CHECKSIG) { // pay-to-pubkey scriptPubKey
-        [d appendBytes:&v length:1];
-        [d appendData:[elem[l - 2] hash160]];
-    }
     else if (l >= 1 && [elem[l - 1] intValue] <= OP_PUSHDATA4 && [elem[l - 1] intValue] > 0) {// pay-to-pubkey scriptSig
         //TODO: implement Peter Wullie's pubKey recovery from signature
         return nil;
     }
     else return nil; // unknown script type
-
+    
     return [self base58checkWithData:d];
 }
 

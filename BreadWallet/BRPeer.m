@@ -31,7 +31,6 @@
 #import "NSData+Bitcoin.h"
 #import "NSData+Hash.h"
 #import <arpa/inet.h>
-#import <netinet/in.h>
 #import "Reachability.h"
 
 #define USERAGENT [NSString stringWithFormat:@"/vertlet:%@/",NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"]]
@@ -885,7 +884,7 @@ services:(uint64_t)services
     }
 }
 
-// described in BIP61: https://gist.github.com/gavinandresen/7079034
+// described in BIP61: https://github.com/bitcoin/bips/blob/master/bip-0061.mediawiki
 - (void)acceptRejectMessage:(NSData *)message
 {
     NSUInteger off = 0, l = 0;
@@ -896,6 +895,12 @@ services:(uint64_t)services
 
     NSLog(@"%@:%u rejected %@ code: 0x%x reason: \"%@\"%@%@", self.host, self.port, type, code, reason,
           txHash ? @" txid: " : @"", txHash ? txHash : @"");
+
+    if (txHash.length == CC_SHA256_DIGEST_LENGTH) { // most likely a double spend due to tx missing from wallet
+        dispatch_async(self.delegateQueue, ^{
+            if (_status == BRPeerStatusConnected) [self.delegate peer:self rejectedTransaction:txHash withCode:code];
+        });
+    }
 }
 
 #pragma mark - hash

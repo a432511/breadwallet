@@ -63,8 +63,6 @@
         }
     }
 
-    //TODO: pin code
-
     //TODO: create a BIP and GATT specification for payment protocol over bluetooth LE
     // https://developer.bluetooth.org/gatt/Pages/default.aspx
 
@@ -76,19 +74,13 @@
 
     //TODO: full screen alert dialogs with clean transitions
 
-    //TODO: fast wallet restore using webservice
+    //TODO: fast wallet restore using webservice and/or utxo p2p message
 
     //TODO: ask user if they need to sweep to a new wallet when restoring because it was compromised
-
-    //TODO: detect if device is jailbroken and prompt user to wipe the wallet `if (fopen("/bin/bash", "r"))`
 
     //TODO: figure out deterministic builds/removing app sigs: http://www.afp548.com/2012/06/05/re-signining-ios-apps/
 
     //TODO: after two or three manual reconnect attempts when network is reachable, request a fresh peer list from DNS
-
-    //TODO: implement state preservation to control things like disabling launch screenshot
-
-    //TODO: XXXXX update openssl
 
     // this will notify user if bluetooth is disabled (on 4S and newer devices that support BTLE)
     //CBCentralManager *cbManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
@@ -151,7 +143,7 @@ performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionH
         if (syncFinishedObserver) [[NSNotificationCenter defaultCenter] removeObserver:syncFinishedObserver];
         if (syncFailedObserver) [[NSNotificationCenter defaultCenter] removeObserver:syncFailedObserver];
         syncFinishedObserver = syncFailedObserver = nil;
-        //TODO: XXXX disconnect
+        //TODO: disconnect
     });
 
     syncFinishedObserver =

@@ -50,8 +50,8 @@
 @property (nonatomic, strong) BRBubbleView *tipView;
 @property (nonatomic, assign) BOOL appeared, showTips, inNextTip;
 @property (nonatomic, strong) Reachability *reachability;
-@property (nonatomic, strong) id urlObserver, fileObserver, activeObserver, balanceObserver, reachabilityObserver;
-@property (nonatomic, strong) id syncStartedObserver, syncFinishedObserver, syncFailedObserver;
+@property (nonatomic, strong) id urlObserver, fileObserver, activeObserver, resignActiveObserver, balanceObserver;
+@property (nonatomic, strong) id reachabilityObserver, syncStartedObserver, syncFinishedObserver, syncFailedObserver;
 @property (nonatomic, assign) NSTimeInterval timeout, start;
 
 @end
@@ -63,7 +63,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    // detect jailbreak so we can throw up an idiot warning
+    // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
     struct stat s;
     BOOL jailbroken = (stat("/bin/sh", &s) == 0) ? YES : NO; // if we can see /bin/sh, the app isn't sandboxed
 
@@ -103,7 +103,6 @@
         usingBlock:^(NSNotification *note) {
             [self.pageViewController setViewControllers:@[self.sendViewController]
              direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            if (m.wallet) [self.navigationController dismissViewControllerAnimated:NO completion:nil];
         }];
 
     self.fileObserver =
@@ -111,13 +110,27 @@
         usingBlock:^(NSNotification *note) {
             [self.pageViewController setViewControllers:@[self.sendViewController]
              direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            if (m.wallet) [self.navigationController dismissViewControllerAnimated:NO completion:nil];
         }];
 
     self.activeObserver =
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil
         queue:nil usingBlock:^(NSNotification *note) {
-            if (self.appeared) [[BRPeerManager sharedInstance] connect];
+            if (self.appeared && m.wallet &&
+                ! [self.navigationController.presentedViewController.restorationIdentifier isEqual:@"PINNav"]) {
+                UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+
+                [[(id)c viewControllers].firstObject setAppeared:YES];
+
+                if (self.navigationController.presentedViewController) {
+                    [self.navigationController dismissViewControllerAnimated:NO completion:^{
+                        [self.navigationController presentViewController:c animated:NO completion:nil];
+                    }];
+                }
+                else [self.navigationController presentViewController:c animated:NO completion:nil];
+
+                c.transitioningDelegate = self;
+                [[BRPeerManager sharedInstance] connect];
+            }
 
             if (jailbroken && m.wallet.balance > 0) {
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
@@ -133,6 +146,26 @@
                                             "Any 'jailbreak' app can control this device and steal funds.", nil)
                   delegate:self cancelButtonTitle:NSLocalizedString(@"ingore", nil)
                   otherButtonTitles:NSLocalizedString(@"close app", nil), nil] show];
+            }
+        }];
+
+    self.resignActiveObserver =
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil
+        queue:nil usingBlock:^(NSNotification *note) {
+            if (self.appeared && m.wallet &&
+                ! [self.navigationController.presentedViewController.restorationIdentifier isEqual:@"PINNav"]) {
+                UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+
+                [[(id)c viewControllers].firstObject setAppeared:YES];
+
+                if (self.navigationController.presentedViewController) {
+                    [self.navigationController dismissViewControllerAnimated:NO completion:^{
+                        [self.navigationController presentViewController:c animated:NO completion:nil];
+                    }];
+                }
+                else [self.navigationController presentViewController:c animated:NO completion:nil];
+
+                c.transitioningDelegate = self;
             }
         }];
 
@@ -162,11 +195,13 @@
     self.syncStartedObserver =
         [[NSNotificationCenter defaultCenter] addObserverForName:BRPeerManagerSyncStartedNotification object:nil
         queue:nil usingBlock:^(NSNotification *note) {
+            BRPeerManager *p = [BRPeerManager sharedInstance];
+
             if (self.reachability.currentReachabilityStatus != NotReachable) [self hideErrorBar];
             [self startActivityWithTimeout:0];
 
-            //TODO: display "syncing..." whenever we're a certain number of blocks behind and >24hrs after seed creation
-            if (m.wallet.balance == 0 && m.seedCreationTime == BITCOIN_REFERENCE_BLOCK_TIME) {
+            if (p.lastBlockHeight + 2016/2 < p.estimatedBlockHeight &&
+                m.seedCreationTime + 60*60*24 < [NSDate timeIntervalSinceReferenceDate]) {
                 self.navigationItem.title = @"syncing...";
             }
         }];
@@ -207,17 +242,33 @@
                                self.view.frame.size.height - label.frame.size.height - 5);
     [self.view addSubview:label];
 #endif
+
+    if (! [[UIApplication sharedApplication] isProtectedDataAvailable] || m.wallet) {
+        UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+
+        [self.navigationController presentViewController:c animated:NO completion:nil];
+        c.transitioningDelegate = self;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    if ([[UIApplication sharedApplication] isProtectedDataAvailable] && ! [[BRWalletManager sharedInstance] wallet]) {
-        UINavigationController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"NewWalletNav"];
+    BRWalletManager *m = [BRWalletManager sharedInstance];
 
-        [self.navigationController presentViewController:c animated:NO completion:nil];
-        self.showTips = YES;
+    if ([[UIApplication sharedApplication] isProtectedDataAvailable] && ! m.wallet) {
+        UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"PINNav"];
+
+        [[(id)c viewControllers].firstObject setAppeared:YES];
+
+        [self.navigationController presentViewController:c animated:NO completion:^{
+            c.transitioningDelegate = self;
+            [c presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"NewWalletNav"]
+             animated:NO completion:nil];
+            self.showTips = YES;
+        }];
+
         return;
     }
 
@@ -230,7 +281,7 @@
     if (! self.appeared) {
         self.appeared = YES;
 
-        if ([[[BRWalletManager sharedInstance] wallet] balance] == 0) {
+        if (m.wallet.balance == 0) {
             [self.pageViewController setViewControllers:@[self.receiveViewController]
              direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
         }
@@ -239,8 +290,10 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    self.navBarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navBarTap:)];
-    [self.navigationController.navigationBar addGestureRecognizer:self.navBarTap];
+    if (! self.navBarTap) {
+        self.navBarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navBarTap:)];
+        [self.navigationController.navigationBar addGestureRecognizer:self.navBarTap];
+    }
 
     if (self.reachability.currentReachabilityStatus == NotReachable) [self showErrorBar];
     if (self.showTips) [self performSelector:@selector(tip:) withObject:nil afterDelay:0.3];
@@ -250,7 +303,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self.navigationController.navigationBar removeGestureRecognizer:self.navBarTap];
+    if (self.navBarTap) [self.navigationController.navigationBar removeGestureRecognizer:self.navBarTap];
     self.navBarTap = nil;
     [self hideTips];
 
@@ -287,6 +340,7 @@
     if (self.urlObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.urlObserver];
     if (self.fileObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.fileObserver];
     if (self.activeObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.activeObserver];
+    if (self.resignActiveObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.resignActiveObserver];
     if (self.reachabilityObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityObserver];
     if (self.balanceObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.balanceObserver];
     if (self.syncStartedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncStartedObserver];
@@ -604,6 +658,18 @@ viewControllerAfterViewController:(UIViewController *)viewController
             }
 
             if (self.progress.progress > 0) self.progress.hidden = self.pulse.hidden = NO;
+            [transitionContext completeTransition:finished];
+        }];
+    }
+    else if ([from.restorationIdentifier isEqual:@"PINNav"]) {
+        to.view.frame = from.view.frame;
+        [v insertSubview:to.view belowSubview:from.view];
+
+        [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            from.view.alpha = 0.0;
+            from.view.transform = CGAffineTransformMakeScale(0.75, 0.75);
+        } completion:^(BOOL finished) {
+            [from.view removeFromSuperview];
             [transitionContext completeTransition:finished];
         }];
     }
