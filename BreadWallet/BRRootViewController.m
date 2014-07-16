@@ -37,7 +37,7 @@
 
 #define BALANCE_TIP NSLocalizedString(@"This is your vertcoin balance. Vertcoin is a currency. "\
                                        "The exchange rate changes with the market.", nil)
-#define BITS_TIP    NSLocalizedString(@"%@ is for 'bits'. %@ = 1 vertcoin", nil)
+#define BITS_TIP    NSLocalizedString(@"%@ is for 'verts'. %@ = 1 vertcoin", nil)
 
 @interface BRRootViewController ()
 

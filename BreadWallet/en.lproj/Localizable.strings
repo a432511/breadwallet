@@ -5,7 +5,7 @@
 "%@ from:%@" = "%1$@ from:%2$@";
 
 /* No comment provided by engineer. */
-"%@ is for 'bits'. %@ = 1 vertcoin" = "%1$@ is for 'bits'. %2$@ = 1 vertcoin";
+"%@ is for 'verts'. %@ = 1 vertcoin" = "%1$@ is for 'verts'. %2$@ = 1 vertcoin";
 
 /* No comment provided by engineer. */
 "%@ to:%@" = "%1$@ to:%2$@";
@@ -137,7 +137,7 @@
 "INVALID  " = "INVALID  ";
 
 /* No comment provided by engineer. */
-"Let others scan this QR code to get your bitcoin address. Anyone can send vercoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
+"Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address." = "Let others scan this QR code to get your vertcoin address. Anyone can send vertcoins to your wallet by transferring them to your address.";
 
 /* No comment provided by engineer. */
 "missing certificate" = "missing certificate";

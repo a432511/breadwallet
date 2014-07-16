@@ -124,7 +124,7 @@ performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionH
     balanceObserver =
     [[NSNotificationCenter defaultCenter] addObserverForName:BRWalletBalanceChangedNotification object:nil queue:nil
                                                   usingBlock:^(NSNotification *note) {
-                                                      //if ([m syncProgress] < 1.0) return; // wait for sync before updating balance
+                                                      if ([m syncProgress] < 1.0) return; // wait for sync before updating balance
                                                       // Set up Local Notifications
                                                       [[UIApplication sharedApplication] cancelAllLocalNotifications];
                                                       UILocalNotification *localNotification = [[UILocalNotification alloc] init];
